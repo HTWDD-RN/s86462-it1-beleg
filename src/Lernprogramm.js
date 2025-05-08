@@ -21,27 +21,27 @@ class Model {
     async getTask(nr) {
         // lokale Aufgaben
         try{
-            const response = await fetch('./questions.json');
+            const response = await fetch('./questions.json', {cache: "no-store"}); // no-store verhindert cache
             const data = await response.json();
-                console.log(data);  // Zeigt die geladenen Daten in der Konsole
-                
-                const questions = data.web; // TODO: je nach Typ die richtigen Fragen auswählen
-                console.log(questions);
-                
-                // get maxQuestions im Thema
-                this.maxQuestions = questions.length;
+            console.log(data);
+            
+            const questions = data.web // TODO: je nach Typ die richtigen Fragen auswählen
+            console.log(questions);
+            
+            // get maxQuestions im Thema
+            this.maxQuestions = questions.length;
 
-                // gewünschte Frage laden
-                const question = questions[nr];
-                console.log("Frage:", question.q);
-                console.log("Antworten:", question.a);
+            // gewünschte Frage laden
+            const question = questions[nr];
+            console.log("Frage:", question.q);
+            console.log("Antworten:", question.a);
 
-                return question; // Aufgabe + Lösungen
-            } catch (error) {
-                alert("Es muss wegen CORS diese Seite auf einem Server gehostet sein, damit JSON Daten geladen werden können!")
-                console.error('Fehler beim Laden der Daten:', error);
-                return null; // Fehlerbehandlung
-            }
+            return question; // Aufgabe + Lösungen
+        } catch (error) {
+            alert("Es muss wegen CORS diese Seite auf einem Server gehostet sein, damit JSON Daten geladen werden können!")
+            console.error('Fehler beim Laden der Daten:', error);
+            return null; // Fehlerbehandlung    
+        }
     }
 
     checkAnswer() {

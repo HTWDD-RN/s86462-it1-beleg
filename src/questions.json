@@ -5,7 +5,12 @@
     ],
   "web": [
     {"q":"Welche Authentifizierung bietet HTTP", "a":["Digest Access Authentication","OTP","OAuth","2-Faktor-Authentifizierung"]},
-    {"q":"Welches Transportprotokoll eignet sich für zeitkritische Übertragungen", "a":["UDP","TCP","HTTP","Fast Retransmit"]}
+    {"q":"Welches Transportprotokoll eignet sich für zeitkritische Übertragungen", "a":["UDP","TCP","HTTP","Fast Retransmit"]},
+    { "q": "Welcher HTTP-Statuscode bedeutet 'Nicht gefunden'?", "a": ["404", "200", "301", "500"] },
+    { "q": "Was ist das Ziel von HTTPS im Vergleich zu HTTP?", "a": ["Verschlüsselung der Verbindung", "Schnellere Ladezeiten", "Weniger Werbung", "Reduzierter Datenverbrauch"] },
+    { "q": "Was beschreibt ein REST-API am besten?", "a": ["Zustandslose Kommunikation über HTTP", "Dateibasiertes Datenbanksystem", "Ein Verschlüsselungsverfahren", "Ein Webserver-Protokoll"] },
+    { "q": "Welche Methode wird typischerweise verwendet, um Daten an einen Server zu senden?", "a": ["POST", "GET", "PUT", "FETCH"] },
+    { "q": "Welcher Port wird standardmäßig für HTTP verwendet?", "a": ["80", "443", "21", "22"] }
     ],
   "allgemein": [
     {"q":"Karl der Große, Geburtsjahr", "a":["747","828","650","1150"]}

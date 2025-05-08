@@ -1,4 +1,4 @@
-# 08.05.2025 (6h)
+# 08.05.2025 (7h)
 
 - GitHub Repo erstellt -> Template geklont
 - Website mit CSS schöner gemacht
@@ -16,3 +16,5 @@
   - Antwortmöglichkeiten random auf Buttons verteilen (jetzt ist immer klar das die erste Antwort richtig ist!)
   - Einstellen des Themas (web, math, ...) über NavBar mit Radio Buttons
   - Button beim Anzeigen der Statistiken ausblenden/leeren & herausfinden wie man Zeilenumbruch für QuestionText machen kann (br?)
+- DevTools -> Network -> Disable Cache, damit immer akt. JS geladen wird
+  - für json: {cache: "no-store"}
