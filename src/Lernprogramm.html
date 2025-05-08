@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <title>Lernprogramm</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" sizes="512x512" href="images/icon-512.png"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta name="ROBOTS" content="INDEX, FOLLOW"/>
+
+    <link rel="stylesheet" href="Lernprogramm.css" type="text/css"/>
+
+    <script src="Lernprogramm.js" type="text/javascript" defer></script>
+
+    <link rel="stylesheet" href="scripts/katex/katex.css" type="text/css"/>
+    <script src="scripts/katex/katex.min.js" type="text/javascript" defer></script>
+    <script src="scripts/katex/contrib/auto-render.min.js" type="text/javascript" defer></script>
+    <noscript>
+        Sie haben JavaScript deaktiviert. Diese Seite benötigt zwingend JavaScript.
+    </noscript>
+</head>
+
+<body>
+    <header>
+        <h1>Lernprogramm</h1>
+    </header>
+
+    <nav>
+        Navigation für Aufgabentyp
+    </nav>
+    <aside>
+        <div id="stats">Sidebar für Statistik: richtig/falsch und Fortschrittsleiste (4/10 Aufgaben)</div>
+
+    </aside>
+
+    <main>
+        <div id="question">Frage kommt hier</div>
+
+        <p> </p>
+
+        <div id="answer-btn" class="flex-container">
+            <button id="A">A</button>
+            <button id="B">B</button>
+            <button id="C">C</button>
+            <button id="D">D</button>
+        </div>
+        <p id="status-text">Bitte auf Neue Frage drücken, um zu starten!</p>
+        
+        <button id="newquestion-btn">Neue Frage</button>
+    </main>
+
+    
+    <div style="height: 5em"></div>
+    <footer>
+        Erstellt von Eric Hübel von 08.05.2025 - ? mit HTML, CSS und JS
+    </footer>
+
+</body>
+</html>

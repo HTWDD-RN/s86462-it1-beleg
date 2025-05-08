@@ -1,0 +1,137 @@
+/* Formatierung body */
+header, main, nav, aside, footer {
+    margin: 0.25em;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    color: white;
+}
+
+/* Scrollbar verhindern */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    background: #020024;
+    background: linear-gradient(120deg,rgba(2, 0, 36, 0.9) 0%, rgba(35, 49, 100, 0.9) 50%, rgba(123, 132, 163, 0.9) 100%);
+    background-attachment: fixed;
+    background-repeat: repeat;
+    background-size: cover;
+
+    margin: 0;
+    padding: 0.5em;
+}
+
+/* Kopf */
+/*https://images.unsplash.com/photo-1528353518104-dbd48bee7bc4?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bmlnaHQlMjBza3l8ZW58MHx8MHx8fDA%3D*/
+header {
+    text-align: center;
+    text-shadow: 1em darkblue;
+    color: white;
+    background: #000000 url(../images/back.jpg) no-repeat left top;
+    background-size:cover;
+    margin-bottom: 1em;
+}
+
+/* Aufgabentyp-Auswahl */
+nav {
+    background: #1488cc;
+    background: linear-gradient(to right, #081442, #756C90);
+    /*background: linear-gradient(to right, #3d55ad, #939ec2);*/    
+}
+
+/* Statistik */
+aside {
+    /*float: right;*/
+    background: linear-gradient(to right, #11998e, #38ef7d);
+}
+
+/* Button */
+button {
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    padding: 15px 32px;
+
+    background: linear-gradient(to bottom, #2B3C70, #5F6C9C);
+
+    text-align: center;
+    color: white;
+    text-decoration: none;
+
+    -webkit-transition-duration: 0.3s; /* Safari */
+    transition-duration: 0.3s;
+}
+
+button:hover {
+    background: linear-gradient(to bottom, #384e91, #7282bb);
+    box-shadow: 0 8px 16px 0 rgba(255,255,255,0.2), 0 6px 20px 0 rgba(255,255,255,0.19);
+}
+
+button:active {
+    background: linear-gradient(to bottom, #1f2b50, #4a5278);
+    transform: scale(0.98);
+}
+
+/* Flex Container für Antwort Buttons */
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    height: 150px;
+    justify-content: center;
+}
+
+.flex-container button {
+    width: 15%;
+    margin-left: 0.5em;
+    margin-right: 1em;
+    margin-bottom: 1em;
+    
+}
+
+#answer-btn button {
+    font-size: large;
+}
+
+/* Neue Frage Button */
+#newquestion-btn {
+    margin-left: 0.5em;
+    font-size: medium;
+}
+
+#question {
+    font-size: large;
+    text-align: center;
+}
+
+/* Quiz-Bereich */
+main {
+    background: linear-gradient(to top, #2B3C70, #5F6C9C);
+}
+
+footer {
+    background: linear-gradient(to right, #081442, #756C90);
+    text-align: center;
+    justify-content: center;
+
+    position: fixed;
+    bottom: 0;
+    width: 98%;
+    box-sizing: border-box;
+}
+
+/* kleiner Bildschirm */
+@media (max-width: 1000px) {
+    .flex-container {
+        height: 30em;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .flex-container button {
+        width: 90%;
+    }
+}
