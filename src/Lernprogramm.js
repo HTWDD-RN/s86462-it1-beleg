@@ -17,29 +17,47 @@ function shuffleArray(array) {
     }
 };
 
-// ############# Model ###########################################################################
+// ############# Model: Fragen laden ############################################################
 class Model {
     constructor() { 
+        this.topic = View.getTopic();
         this.questions = [];
         this.maxQuestions = 999999;
         this.roundStarted = 0;
     }
 
     // Holt eine Frage aus dem Array, zufällig ausgewählt oder vom Server
-    // es werden die IDs hardgecodet für jeden Aufgabentyp
+    // Beim: es werden die IDs hardgecodet für jeden Aufgabentyp
     // z.B. 1-5 für Web, 6-10 für Mathe, ...
     async getQuestion(nr) {
         // lokale Aufgaben
-        if (this.roundStarted != 1){ // nur neuladen aus Datei, wenn neue Runde
-            try{
+        if (this.roundStarted != 1){ // nur neuladen aus Datei, wenn neue Runde oder neues Thema
+            try {
                 this.roundStarted = 1;
 
                 const response = await fetch('./questions.json', {cache: "no-store"}); // no-store verhindert cache
                 const data = await response.json();
                 
-                console.log(data.web)
-                shuffleArray(data.web) // TODO: je nach Typ die richtigen Fragen auswählen
-                this.questions = data.web;
+                // nach Typ die richtigen Fragen auswählen
+                this.topic = View.getTopic();
+                console.log("Topic: " + this.topic);
+                if (this.topic === "allgemein"){
+                    shuffleArray(data.allgemein);
+                    this.questions = data.allgemein;
+                }
+                else if (this.topic === "web"){
+                    shuffleArray(data.web);
+                    this.questions = data.web;
+                }
+                else if (this.topic === "mathe"){
+                    shuffleArray(data.mathe);
+                    this.questions = data.mathe;
+                }
+                else if (this.topic === "minecraft"){
+                    shuffleArray(data.minecraft);
+                    this.questions = data.minecraft;
+                }
+
                 console.log(this.questions);
                 
                 // get maxQuestions im Thema
@@ -81,6 +99,18 @@ class Presenter {
         this.v = v;
     }
 
+    // Reset der Variablen für neue Runde
+    reset(){
+        console.log("Resetting!");
+
+        this.question = null;
+        this.questionNr = -1;
+        this.correctQuestions = 0;
+
+        this.arrayCreated = 0;
+        this.questionLog = null;
+    }
+
     // String für Endbildschirm mit Zusammenfassung der Ergebnisse
     createQuestionSummaryStr(){
         let summaryString = "";
@@ -88,23 +118,26 @@ class Presenter {
             let correctionString = "";
             let answerStatus = "";
             let answerString = "";
+            let question = "";
 
-            if (this.questionLog[i][0] == 0){
+            if (this.questionLog[i][0] == 0){ // unbeantwortet
                 answerStatus = "🚫";
                 answerString = "-";
             }
-            if (this.questionLog[i][0] == -1){
+            if (this.questionLog[i][0] == -1){ // falsch
                 answerStatus = "❌";
                 answerString = this.questionLog[i][1];
                 correctionString = " (richtig ist: " + this.m.questions[i].a[0] + ")";
 
             }
-            if (this.questionLog[i][0] == 1){
+            if (this.questionLog[i][0] == 1){ // richtig
                 answerStatus = "✅";
                 answerString = this.questionLog[i][1]
             }
+            // kein <br> in Fragen
+            question = this.m.questions[i].q.replace("<br>", " ");
 
-            summaryString = summaryString + answerStatus + " " + (i+1) + ". " + this.m.questions[i].q + ": " + answerString + correctionString  + "<br>";
+            summaryString = summaryString + answerStatus + " " + (i+1) + ". " + question + ": " + answerString + correctionString  + "<br>";
         }
         return summaryString;
     }
@@ -112,13 +145,17 @@ class Presenter {
     // Holt eine neue Frage aus dem Model und setzt die View
     async setQuestion() {
         this.questionNr++;
-        // Buttons deaktivieren
-        View.setQuestionButtonsDisabled(false);
+        // Endbildschrirm deaktivieren
         View.setEndscreen("disabled");
+        View.setQuestionButtonsDisabled(false);
 
         console.log(this.questionNr+1 + "/" + this.m.maxQuestions);
         if (this.questionNr+1 > this.m.maxQuestions){ // alle Fragen beantwortet?
             // Hier eine Übersicht anzeigen (wieviel richtig?)
+            View.setEndscreen("enabled");
+            // Buttons deaktivieren
+            View.setQuestionButtonsDisabled(true);
+
             let summaryString = this.createQuestionSummaryStr();
             View.renderEndScreenText(summaryString);
             View.renderStatusText( "✅ richtig | ❌ falsch | 🚫 unbeantwortet");
@@ -126,17 +163,21 @@ class Presenter {
 
             let percentageCorrect = Math.round(this.correctQuestions / this.m.maxQuestions * 100);
             View.renderQuestionText("Alle Fragen beantwortet!<br>Richtig beantwortet: " + this.correctQuestions + " von " + this.m.maxQuestions + " (" + percentageCorrect + "%)");
-            View.setEndscreen("enabled");
 
-            // zurücksetzen
-            this.m.roundStarted = 0;
-
-            this.questionNr = -1; 
-            this.correctQuestions = 0;
-
-            this.arrayCreated = 0;
-            this.questionLog = null;
+            this.m.roundStarted = 0; // neue Runde -> reset
+            this.reset();
             return
+        }
+
+        let curtopic = View.getTopic();
+        if (this.m.topic != curtopic){ // neues Thema & Runde -> reset
+            console.log("Topic Change! New Round");
+            this.m.roundStarted = 0;
+            this.reset();
+
+            this.questionNr++;
+            // Endbildschrim deaktivieren
+            View.setEndscreen("disabled");  
         }
 
         this.question = await this.m.getQuestion(this.questionNr); // Frage bekommen
@@ -155,7 +196,7 @@ class Presenter {
         View.renderStatusText("Bitte eine Antwort auswählen!")
         
         let shuffledAnswers = [...this.question.a]; // Kopie erstellen
-        shuffleArray(shuffledAnswers); // random
+        shuffleArray(shuffledAnswers); // random Antworten
         
         console.log(shuffledAnswers);
         
@@ -179,18 +220,16 @@ class Presenter {
             this.questionLog[this.questionNr] = [1, document.querySelectorAll("#answer-btn > *")[answer].textContent];
         } 
         else{
-            console.log("Falsche Antwort! Richtig ist " + this.question.a[0]);
-            View.renderStatusText("❌ Falsche Antwort! Richtig ist " + this.question.a[0]);
+            console.log("Falsche Antwort! Richtig ist: " + this.question.a[0]);
+            View.renderStatusText("❌ Falsche Antwort! Richtig ist: " + this.question.a[0]);
 
             this.questionLog[this.questionNr] = [-1, document.querySelectorAll("#answer-btn > *")[answer].textContent];
         }
-        console.log("QUESTION ARRAY: " + this.questionLog);
-        // Buttons deaktivieren
-        View.setQuestionButtonsDisabled(true);
+        console.log("Question Array: " + this.questionLog);
     }
 }
 
-// ##################### View #####################################################################
+// ##################### View: Bildschirmausgabe, Eventhandling ########################################
 class View {
     constructor(p) {
         this.p = p;  // Presenter
@@ -202,11 +241,16 @@ class View {
         // use capture false -> bubbling (von unten nach oben aufsteigend)
         // this soll auf Objekt zeigen -> bind (this)
         document.getElementById("answer-btn").addEventListener("click", this.checkEvent.bind(this), false); // checkEvent() für 4 Answer Buttons
-        document.getElementById("newquestion-btn").addEventListener("click", this.start.bind(this), false); // Start() für Start Button
+        document.getElementById("newquestion-btn").addEventListener("click", this.newQuestion.bind(this), false); // newQuestion() für NewQuestion Button
     }
 
-    start() {
+    newQuestion() {
         this.p.setQuestion();
+        
+        setTimeout(() => {
+            window.scrollBy(0, 1);
+            window.scrollBy(0, -1);
+        }, 25);
     }
 
     static inscribeButtons(i, text, pos) {
@@ -227,12 +271,28 @@ class View {
                 document.querySelectorAll("#answer-btn > *")[i].style.display = "none";
             }
             document.getElementById("end-screen-text").style.display = "block";
+            View.setQuestionButtonsDisabled(true);
         }
         else if (action == "disabled"){
             for (let i = 0; i < 4; i++){
                 document.querySelectorAll("#answer-btn > *")[i].style.display = "block";
             }
             document.getElementById("end-screen-text").style.display = "none";
+        }
+    }
+
+    static getTopic(){
+        if (document.getElementById('web-topic').checked) {
+            return "web";
+        }
+        else if (document.getElementById('math-topic').checked) {
+            return "mathe";
+        }
+        else if (document.getElementById('general-topic').checked) {
+            return "allgemein";
+        }
+        else if (document.getElementById('minecraft-topic').checked) {
+            return "minecraft";
         }
     }
     

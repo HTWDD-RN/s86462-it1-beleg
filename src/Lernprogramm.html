@@ -27,25 +27,33 @@
     </header>
 
     <nav>
-        Navigation für Aufgabentyp
-        <label for="web-topic"> 
-            <input type="radio" id="web-topic" name="topic">Web</input>
-        </label>
-        <label for="math-topic"> 
-            <input type="radio" id="math-topic" name="topic">Mathe</input>
-        </label>
-        <label for="general-topic"> 
-            <input type="radio" id="general-topic" name="topic">Allgemein</input>
-        </label>
+        Thema: <br>
+        <div id="topic">
+            <label>
+                <input type="radio" id="web-topic" name="topic" checked>
+                <img src="/images/web.png" width="15%">
+                Web
+            </label>
+            <label> 
+                <input type="radio" id="math-topic" name="topic"></input><img src="/images/math.png" width="15%"> Mathe
+            </label>
+            <label>
+                <input type="radio" id="minecraft-topic" name="topic"></input> <img src="/images/mc.png" width="10%">  Minecraft
+            </label>
+            <label>
+                <input type="radio" id="general-topic" name="topic"></input> Allgemein
+            </label>
+        </div>
         
     </nav>
+
     <aside>
         <div id="stats">Sidebar für Statistik: richtig/falsch und Fortschrittsleiste (4/10 Aufgaben)</div>
 
     </aside>
 
     <main>
-        <div id="question">Frage kommt hier</div>
+        <div id="question"><p>Frage kommt hier</p></div>
         <hr>
 
         <div id="answer-btn" class="flex-container">
@@ -63,7 +71,7 @@
     
     <div style="height: 5em"></div>
     <footer>
-        Erstellt von Eric Hübel von 08.05.2025 - ? mit HTML, CSS und JS
+        Erstellt von Eric Hübel von 08.05. - 09.05.2025 mit HTML, CSS und JS
     </footer>
 
 </body>

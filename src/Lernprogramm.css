@@ -21,12 +21,13 @@ body {
     background-repeat: repeat;
     background-size: cover;
 
+    font-family: Arial, Helvetica, sans-serif;
+
     margin: 0;
     padding: 0.5em;
 }
 
 /* Kopf */
-/*https://images.unsplash.com/photo-1528353518104-dbd48bee7bc4?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bmlnaHQlMjBza3l8ZW58MHx8MHx8fDA%3D*/
 header {
     text-align: center;
     text-shadow: 1em darkblue;
@@ -64,6 +65,8 @@ button {
 
     -webkit-transition-duration: 0.3s; /* Safari */
     transition-duration: 0.3s;
+
+    cursor: pointer;
 }
 
 button:hover {
@@ -80,6 +83,31 @@ button:disabled {
     box-shadow: none;
     transform: none;
     background: linear-gradient(to bottom, #506194, #8793be);
+}
+
+/* Radiobuttons */
+input[type="radio"] {
+    accent-color: #3e5494;
+    margin-right: 0.5em;
+    transform: scale(1.3);
+    cursor: pointer;
+}
+
+/* Label für Radiobutton */
+#topic label {
+    white-space: nowrap;
+    margin-right: 1em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    cursor: pointer;
+}
+
+#topic img {
+    height: 1.5em;
+    width: auto;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 /* Flex Container für Antwort Buttons & Statustext & NeueFrageButton */
@@ -135,6 +163,7 @@ footer {
     bottom: 0;
     width: calc(100% - 1.5em);
     box-sizing: border-box;
+    z-index: 1;
 }
 
 /* kleiner Bildschirm */

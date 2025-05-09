@@ -1,11 +1,12 @@
 { 
   "mathe": [
-    {"q":"x^2+x^2", "a":["2x^2","x^4","x^8","2x^4"]},
-    {"q":"x^2*x^2", "a":["x^4","x^2","2x^2","4x"]}
+    {"q": "x^2 + x^2 = ", "a": ["2x^2","x^4","x^8","2x^4"]},
+    {"q": "x^2 * x^2 = ", "a": ["x^4","x^2","2x^2","4x"]},
+    {"q": "10*25 + x = 420<br>x = ?", "a": ["170","160","150","180"]}
     ],
   "web": [
-    {"q": "Welche Authentifizierung bietet HTTP?", "a":["Digest Access Authentication","OTP","OAuth","2-Faktor-Authentifizierung"]},
-    {"q": "Welches Transportprotokoll eignet sich für zeitkritische Übertragungen?", "a":["UDP","TCP","HTTP","Fast Retransmit"]},
+    {"q": "Welche Authentifizierung bietet HTTP?", "a": ["Digest Access Authentication","OTP","OAuth","2-Faktor-Authentifizierung"]},
+    {"q": "Welches Transportprotokoll eignet sich für zeitkritische Übertragungen?", "a": ["UDP","TCP","HTTP","Fast Retransmit"]},
     {"q": "Welcher HTTP-Statuscode bedeutet 'Nicht gefunden'?", "a": ["404", "200", "301", "500"] },
     {"q": "Was ist das Ziel von HTTPS im Vergleich zu HTTP?", "a": ["Verschlüsselung der Verbindung", "Schnellere Ladezeiten", "Weniger Werbung", "Reduzierter Datenverbrauch"] },
     {"q": "Was beschreibt ein REST-API am besten?", "a": ["Zustandslose Kommunikation über HTTP", "Dateibasiertes Datenbanksystem", "Ein Verschlüsselungsverfahren", "Ein Webserver-Protokoll"] },
@@ -13,10 +14,22 @@
     {"q": "Welcher Port wird standardmäßig für HTTP verwendet?", "a": ["80", "443", "21", "22"] }
     ],
   "allgemein": [
-    {"q":"Karl der Große, Geburtsjahr", "a":["747","828","650","1150"]}
+    {"q": "Karl der Große, Geburtsjahr", "a": ["747","828","650","1150"]}
     ],
+  "minecraft": [
+    {"q": "Wie viele Slots hat ein Spieler-Inventar inklusive Hotbar (ohne Rüstung, Offhand)?", "a": ["36", "27", "9", "40"]},
+    {"q": "Welches Werkzeug braucht man, um Diamanten abzubauen?", "a": ["Eisen-Spitzhacke", "Holz-Spitzhacke", "Gold-Spitzhacke", "Stein-Spitzhacke"]},
+    {"q": "Mit welchem Befehl kann man den Schwierigkeitsgrad auf 'Hard' setzen?", "a": ["/difficulty hard", "/setdifficulty hard", "/gamemode hard", "/set hard"]},
+    {"q": "Was ist die Standard-Portnummer eines Minecraft-Servers?", "a": ["25565", "25566", "443", "19132"]},
+    {"q": "Wie nennt man die Datei, in der die Minecraft-Servereinstellungen stehen?", "a": ["server.properties", "settings.ini", "config.json", "worlddata.dat"]},
+    {"q": "Was passiert bei '/kill @e[type=!player]'?", "a": ["Alle Nicht-Spieler-Entitäten sterben", "Alle Spieler sterben", "Nur der Befehlssender stirbt", "Alle Entitäten sterben"]},
+    {"q": "Was macht '/reload' auf einem Server?", "a": ["Lädt Funktionen und Datapacks neu", "Startet den Server neu", "Leert den Chat", "Gibt alle Items zurück"]},
+    {"q": "Was bewirkt '/tp @p ~ ~10 ~'?", "a": ["Teleportiert den Spieler 10 Blöcke nach oben", "Teleportiert alle Spieler auf Y=10", "Teleportiert den nächsten Spieler zu Koordinaten 0,10,0", "Teleportiert den Spieler 10 Blöcke nach vorne"]},
+    {"q": "Wann ist Minecraft Release 1.0 erschienen?", "a": ["18.11.2011", "11.11.2011", "25.11.2011", "04.11.2011"]},
+    {"q": "Wieviele neue Dimensionen wurden im Easter-Egg Snapshot 20w14infinite hinzugefügt?", "a": ["2.147.483.645", "2,147,483,648", "18.446.744.073.709.551.615", "18.446.744.073.709.551.612"]}
+  ],
   "noten": [
-    {"q":"C4", "a":["C","D","E","H"]},
-    {"q":"(C4 E4 G4)", "a": ["C", "H", "F", "D"]}
+    {"q": "C4", "a": ["C","D","E","H"]},
+    {"q": "(C4 E4 G4)", "a": ["C", "H", "F", "D"]}
     ]       
 }
