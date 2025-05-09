@@ -83,6 +83,7 @@ button:disabled {
     box-shadow: none;
     transform: none;
     background: linear-gradient(to bottom, #506194, #8793be);
+    cursor: default;
 }
 
 /* Radiobuttons */

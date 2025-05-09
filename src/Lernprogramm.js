@@ -209,6 +209,7 @@ class Presenter {
 
     // Prüft die Antwort, aktualisiert Statistik und setzt die View
     checkAnswer(answer) {
+        View.setQuestionButtonsDisabled(true);
         console.log("Lösung: " + this.question.a[0]);
         console.log("Button-Antwort: " + document.querySelectorAll("#answer-btn > *")[answer].textContent);
 
