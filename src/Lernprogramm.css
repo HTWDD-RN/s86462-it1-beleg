@@ -51,6 +51,7 @@ aside {
 
 /* Button */
 button {
+    display: block;
     border: 1px solid #ccc;
     border-radius: 0.5em;
     padding: 15px 32px;
@@ -75,12 +76,19 @@ button:active {
     transform: scale(0.98);
 }
 
-/* Flex Container für Antwort Buttons */
+button:disabled {
+    box-shadow: none;
+    transform: none;
+    background: linear-gradient(to bottom, #506194, #8793be);
+}
+
+/* Flex Container für Antwort Buttons & Statustext & NeueFrageButton */
 .flex-container {
     display: flex;
     flex-direction: row;
     align-items: stretch;
-    height: 150px;
+    height: auto;
+    
     justify-content: center;
 }
 
@@ -94,6 +102,10 @@ button:active {
     font-size: large;
 }
 
+#status-text {
+    margin-left: 0.5em;
+}
+
 /* Neue Frage Button */
 #newquestion-btn {
     margin-left: 0.5em;
@@ -103,6 +115,10 @@ button:active {
 #question {
     font-size: large;
     text-align: center;
+}
+
+hr {
+    border-top: 1px solid #cccccc;
 }
 
 /* Quiz-Bereich */
@@ -124,12 +140,12 @@ footer {
 /* kleiner Bildschirm */
 @media (max-width: 1000px) {
     .flex-container {
-        height: 20em;
         flex-direction: column;
         align-items: stretch;
     }
 
     .flex-container button {
         width: 100%;
+        margin-right: 0;
     }
 }

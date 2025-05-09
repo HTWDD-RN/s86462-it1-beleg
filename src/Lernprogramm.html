@@ -28,6 +28,16 @@
 
     <nav>
         Navigation für Aufgabentyp
+        <label for="web-topic"> 
+            <input type="radio" id="web-topic" name="topic">Web</input>
+        </label>
+        <label for="math-topic"> 
+            <input type="radio" id="math-topic" name="topic">Mathe</input>
+        </label>
+        <label for="general-topic"> 
+            <input type="radio" id="general-topic" name="topic">Allgemein</input>
+        </label>
+        
     </nav>
     <aside>
         <div id="stats">Sidebar für Statistik: richtig/falsch und Fortschrittsleiste (4/10 Aufgaben)</div>
@@ -36,16 +46,16 @@
 
     <main>
         <div id="question">Frage kommt hier</div>
-
-        <p> </p>
+        <hr>
 
         <div id="answer-btn" class="flex-container">
             <button id="A">A</button>
             <button id="B">B</button>
             <button id="C">C</button>
             <button id="D">D</button>
+            <div id="end-screen-text"></div>
         </div>
-        <p id="status-text">Bitte auf Neue Frage drücken, um zu starten!</p>
+        <p id="status-text">➣ Bitte auf Neue Frage drücken, um zu starten!</p>
         
         <button id="newquestion-btn">Neue Frage</button>
     </main>
