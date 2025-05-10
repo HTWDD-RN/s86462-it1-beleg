@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let p = new Presenter();
     let v = new View(p);
     p.setModelAndView(m, v);
-    //p.setTask();
+    View.setQuestionButtonsDisabled(true);
 });
 
 // Fisher–Yates shuffle
@@ -24,14 +24,16 @@ class Model {
         this.questions = [];
         this.maxQuestions = 999999;
         this.roundStarted = 0;
+
+        this.username = "eric.hue@web.de";
+        this.password = "SecretAmazingPW!1!"; // sehr sicher lol
     }
 
-    // Holt eine Frage aus dem Array, zufällig ausgewählt oder vom Server
-    // Beim: es werden die IDs hardgecodet für jeden Aufgabentyp
-    // z.B. 1-5 für Web, 6-10 für Mathe, ...
+    // Holt eine Frage aus dem JSON oder vom Server
     async getQuestion(nr) {
-        // lokale Aufgaben
-        if (this.roundStarted != 1){ // nur neuladen aus Datei, wenn neue Runde oder neues Thema
+        // lokale Fragen
+        this.topic = View.getTopic();
+        if (this.roundStarted != 1 && this.topic != "allgemeinSrv"){ // nur neuladen aus Datei, wenn neue Runde oder neues Thema
             try {
                 this.roundStarted = 1;
 
@@ -68,7 +70,63 @@ class Model {
                 return null; // Fehlerbehandlung    
             }
         }
+        else if (this.roundStarted != 1 && this.topic === "allgemeinSrv"){ // Online Fragen
+            // curl --user eric.hue@web.de:SecretAmazingPW\!\1\! -X GET https://idefix.informatik.htw-dresden.de:8888/api/quizzes/1959
+            this.roundStarted = 1;
 
+            const quizIdStart = 1950;
+            const quizIdEnd = 1961;
+            //const quizIdStart = 1900;
+            //const quizIdEnd = 1961;
+            const quizIdNum = (quizIdEnd - quizIdStart) +1;
+
+            const headers = new Headers();
+            headers.set('Authorization', 'Basic ' + btoa(this.username + ':' + this.password));
+
+            this.maxQuestions = quizIdNum;
+            this.questions = [];
+            //this.questions = new Array(quizIdNum);
+            console.log("HELLO");
+            for (let quizId = quizIdStart -1; quizId <= quizIdEnd; quizId++){
+                View.renderQuestionText("Laden... (ID: " + quizId + "/" + quizIdEnd + ")");
+                console.log("Getting ID: " + quizId);
+
+                // Timeout auf 5 Sek
+                const controller = new AbortController();
+                setTimeout(() => controller.abort(), 5000);
+                try {
+                    const response = await fetch(`https://idefix.informatik.htw-dresden.de:8888/api/quizzes/${quizId}`, {
+                        method: 'GET',
+                        headers: headers,
+                        signal: controller.signal
+                    });
+
+                    if (response.status != 404){ // nicht vorhandene werden ignoriert
+                        const data = await response.json();
+                        console.log("Quiz geladen:", data);
+
+                        // Array befüllen
+                        this.questions.push({
+                            q: "<b>" + data.title + "</b><br>" + data.text,
+                            a: data.options,
+                            id: quizId // zusätzlich ID merken
+                        });
+                    }
+                    else {
+                        this.maxQuestions = this.maxQuestions -1; // eine Frage weniger bei Fehler 404
+                    }
+
+                } catch (error) {
+                    if (error.name === 'AbortError') {
+                        alert("Timeout: Server nicht erreichbar (bist du im HTW-Netz?)");
+                    } else {
+                        alert("Fehler beim Laden: " + error.message);
+                    }
+                    return null;
+                }
+            }
+            shuffleArray(this.questions); // Aufgaben random
+        }
         // gewünschte Frage laden
         const question = this.questions[nr];
         console.log("Frage:", question.q);
@@ -77,9 +135,48 @@ class Model {
         return question; // Aufgabe + Lösungen
     }
 
-    checkAnswer() {
-        // TODO, Server Request schicken mit Antwort
-        
+    async checkAnswer(nr, answerNr, id) { // Server Request schicken mit Antwort
+        // curl --user eric.hue@web.de:SecretAmazingPW\!\1\! -X POST -H 'Content-Type: application/json' \
+        // https://idefix.informatik.htw-dresden.de:8888/api/quizzes/1959/solve --data '[3]'
+        console.log("ONLINE ANSWER CHECK!!");
+        console.log("Checking num: " + nr);
+        console.log("Answer given: " + answerNr);
+        console.log("Quiz-ID: " + id);
+
+        const headers = new Headers();
+        headers.set('Authorization', 'Basic ' + btoa(this.username + ':' + this.password));
+        headers.set('Content-Type', 'application/json');
+
+        try {
+            // Timeout auf 5 Sek
+            const controller = new AbortController();
+            setTimeout(() => controller.abort(), 5000);
+
+            const response = await fetch(`https://idefix.informatik.htw-dresden.de:8888/api/quizzes/${id}/solve`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify([answerNr]),
+                signal: controller.signal
+            });
+
+            const data = await response.json();
+            console.log(data);
+            console.log("SUCESS: " + data.success);
+            if (data.success === true){ // richtig
+                return 1;
+            }
+            else{ // falsch
+                return -1;
+            }
+
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                alert("Timeout: Server nicht erreichbar (bist du im HTW-Netz?)");
+            } else {
+                alert("Fehler beim Laden: " + error.message);
+            }
+            return null;
+        }
     }
 }
 
@@ -127,7 +224,9 @@ class Presenter {
             if (this.questionLog[i][0] == -1){ // falsch
                 answerStatus = "❌";
                 answerString = this.questionLog[i][1];
-                correctionString = " (richtig ist: " + this.m.questions[i].a[0] + ")";
+                if (this.m.topic != "allgemeinSrv"){ // online ist nicht klar was richtig ist
+                    correctionString = " (richtig ist: " + this.m.questions[i].a[0] + ")";
+                }
 
             }
             if (this.questionLog[i][0] == 1){ // richtig
@@ -144,10 +243,21 @@ class Presenter {
 
     // Holt eine neue Frage aus dem Model und setzt die View
     async setQuestion() {
+        View.setNewQuestionBtnDisabled(true);
+        View.setQuestionButtonsDisabled(true);
+        View.renderProgressBar(0);
+        View.renderStatsText("0/0");
+        View.renderStatusText("Bitte warten!")
         this.questionNr++;
+       
+        View.renderQuestionText("Laden...");
+        for (let i = 0; i < 4; i++) {
+            let text = "..."
+            let pos = i;
+            View.inscribeButtons(i, text, pos); // Tasten beschriften -> View -> Antworten
+        }
         // Endbildschrirm deaktivieren
         View.setEndscreen("disabled");
-        View.setQuestionButtonsDisabled(false);
 
         console.log(this.questionNr+1 + "/" + this.m.maxQuestions);
         if (this.questionNr+1 > this.m.maxQuestions){ // alle Fragen beantwortet?
@@ -155,6 +265,9 @@ class Presenter {
             View.setEndscreen("enabled");
             // Buttons deaktivieren
             View.setQuestionButtonsDisabled(true);
+            View.setNewQuestionBtnDisabled(false);
+            View.renderProgressBar(100);
+            View.renderStatsText((this.m.maxQuestions) + "/" + this.m.maxQuestions);
 
             let summaryString = this.createQuestionSummaryStr();
             View.renderEndScreenText(summaryString);
@@ -181,6 +294,13 @@ class Presenter {
         }
 
         this.question = await this.m.getQuestion(this.questionNr); // Frage bekommen
+        if (this.question == null){ // Server Timeout? -> Abbruch
+            View.setNewQuestionBtnDisabled(false);
+            View.renderStatusText("Server Timeout!")
+            this.m.roundStarted = 0; // neue Runde -> reset
+            this.reset();
+            return;
+        }
         // Array für Spielerantworten aller Fragen erstellen
         if (this.arrayCreated == 0){
             this.questionLog = new Array(this.m.maxQuestions);
@@ -194,7 +314,7 @@ class Presenter {
         View.renderQuestionText(this.question.q);
         View.renderStatsText((this.questionNr +1) + "/" + this.m.maxQuestions);
         let percent = Math.round((this.questionNr+1) / this.m.maxQuestions * 100); 
-        console.log(percent);
+        //console.log(percent);
         View.renderProgressBar(percent);
         View.renderStatusText("Bitte eine Antwort auswählen!")
         
@@ -208,28 +328,71 @@ class Presenter {
             let pos = i;
             View.inscribeButtons(i, text, pos); // Tasten beschriften -> View -> Antworten
         }
+        View.setNewQuestionBtnDisabled(false);
+        View.setQuestionButtonsDisabled(false);
     }
 
     // Prüft die Antwort, aktualisiert Statistik und setzt die View
-    checkAnswer(answer) {
+    async checkAnswer(answer) {
+        View.renderStatusText("Überprüfe Antwort...")
+        View.setNewQuestionBtnDisabled(true);
         View.setQuestionButtonsDisabled(true);
         console.log("Lösung: " + this.question.a[0]);
         console.log("Button-Antwort: " + document.querySelectorAll("#answer-btn > *")[answer].textContent);
 
-        if (this.question.a[0] == document.querySelectorAll("#answer-btn > *")[answer].textContent){ // Aufgabentext == Buttontext?
-            console.log("Richtige Antwort!");
-            View.renderStatusText("✅ Richtige Antwort!");
+        if (this.m.topic != "allgemeinSrv"){ // lokale Fragen
+            console.log("LOKAL");
+            if (this.question.a[0] == document.querySelectorAll("#answer-btn > *")[answer].textContent){ // Aufgabentext == Buttontext?
+                console.log("Richtige Antwort!");
+                View.renderStatusText("✅ Richtige Antwort!");
 
-            this.correctQuestions++;
-            this.questionLog[this.questionNr] = [1, document.querySelectorAll("#answer-btn > *")[answer].textContent];
-        } 
-        else{
-            console.log("Falsche Antwort! Richtig ist: " + this.question.a[0]);
-            View.renderStatusText("❌ Falsche Antwort! Richtig ist: " + this.question.a[0]);
+                this.correctQuestions++;
+                this.questionLog[this.questionNr] = [1, document.querySelectorAll("#answer-btn > *")[answer].textContent];
+            } 
+            else{
+                console.log("Falsche Antwort! Richtig ist: " + this.question.a[0]);
+                View.renderStatusText("❌ Falsche Antwort! Richtig ist: " + this.question.a[0]);
 
-            this.questionLog[this.questionNr] = [-1, document.querySelectorAll("#answer-btn > *")[answer].textContent];
+                this.questionLog[this.questionNr] = [-1, document.querySelectorAll("#answer-btn > *")[answer].textContent];
+            }
+        }
+        else if (this.m.topic === "allgemeinSrv"){ // Online Fragen -> Server Check
+            console.log("ONLINE");
+            // Antwort Zahl rausbekommen
+            let answerNum = 0;
+            let buttonText = document.querySelectorAll("#answer-btn > *")[answer].textContent;
+            for (let i=0; i<4; i++){
+                //console.log("Text: " + buttonText);
+                //console.log("Question: " + this.question.a[i]);
+                if (buttonText === this.question.a[i]){
+                    answerNum = i;
+                    break;
+                }
+            }
+            console.log("Num answered: " + answerNum);
+            let correct = await this.m.checkAnswer(this.questionNr, answerNum, this.question.id);
+            if (correct == null){ // Server Timeout?
+                View.setNewQuestionBtnDisabled(false);
+                View.renderStatusText("Server Timeout!");
+                return;
+            }
+            console.log("Korrekt: " + correct);
+            if (correct == 1){ // richtig
+                console.log("Richtige Antwort!");
+                View.renderStatusText("✅ Richtige Antwort!");
+
+                this.correctQuestions++;
+                this.questionLog[this.questionNr] = [1, document.querySelectorAll("#answer-btn > *")[answer].textContent];
+            }
+            else { // falsch
+                console.log("Falsche Antwort!");
+                View.renderStatusText("❌ Falsche Antwort!");
+
+                this.questionLog[this.questionNr] = [-1, document.querySelectorAll("#answer-btn > *")[answer].textContent];
+            }
         }
         console.log("Question Array: " + this.questionLog);
+        View.setNewQuestionBtnDisabled(false);
     }
 }
 
@@ -251,6 +414,7 @@ class View {
     newQuestion() {
         this.p.setQuestion();
         
+        // Neuzeichnen erzwingen
         setTimeout(() => {
             window.scrollBy(0, 1);
             window.scrollBy(0, -1);
@@ -266,6 +430,10 @@ class View {
         for (let i = 0; i < 4; i++){
             document.querySelectorAll("#answer-btn > *")[i].disabled = disabled_bool;
         }
+    }
+
+    static setNewQuestionBtnDisabled(disabled_bool){
+        document.getElementById("newquestion-btn").disabled = disabled_bool;
     }
 
     // Buttons & EndScreenText verstecken/anzeigen
@@ -292,8 +460,8 @@ class View {
         else if (document.getElementById('math-topic').checked) {
             return "mathe";
         }
-        else if (document.getElementById('general-topic').checked) {
-            return "allgemein";
+        else if (document.getElementById('generalSrv-topic').checked) {
+            return "allgemeinSrv";
         }
         else if (document.getElementById('minecraft-topic').checked) {
             return "minecraft";

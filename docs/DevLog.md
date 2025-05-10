@@ -37,12 +37,20 @@
   - Icons hinzugefügt
 - Todo:
   - Progress Bar in Status mit Prozent OK
-  - versuchen Thema "Allgemein" von Webquiz-API zu laden -> vorher welche mit curl hochladen
+  - versuchen Thema "Allgemein" von Webquiz-API zu laden OK -> vorher welche mit curl hochladen
 
-  ## 10.05.2025 (2h)
+  ## 10.05.2025 (6h)
 
   - Fortschrittsleiste hinzugefügt
     - mit Prozent und daneben wieviel Fragen von MaxFragen
+  - hab es geschafft Fragen vom WebQuiz Server zu laden
+    - sehr langsam, da jede ID einzeln gefetcht werden muss (200-300ms pro ID)
+    - CheckAnswer: kann leider nicht wissen, welche Antwort die richtige ist, da der Server bei einer falschen Antwort nicht sagt, welche richtig ist
+    -> man könnte da zwar für jede Frage alle 4 Möglichkeiten abfragen, aber das dauert zu lange
+  - der Server ist nur aus dem HTW-Netz erreichbar, deshalb gibt es eine Fehlermeldung
+  - Timeout auf 5 Sek. gesetzt, damit man nicht eine Min warten muss
+  - Buttons werden nun sicherheitshalber deaktiviert, damit diese nicht gedrückt werden, wenn etwas noch nicht vollständig geladen ist
+  - mehr Statusmeldungen gesetzt und bessere Fehlerbehandlung
   - Todo:
-    - Webquiz-API: will das Thema Allgemein immer vom Server laden -> Fallback lokal, wenn Server nicht erreichbar?
+    - Webquiz-API: will das Thema Allgemein immer vom Server laden OK
     - KaTeX Rendering?
