@@ -35,3 +35,14 @@
     -> falls das Thema inmitten der Fragen geändert wird, beginnt eine neue Runde
   - neue Fragen hinzugefügt
   - Icons hinzugefügt
+- Todo:
+  - Progress Bar in Status mit Prozent OK
+  - versuchen Thema "Allgemein" von Webquiz-API zu laden -> vorher welche mit curl hochladen
+
+  ## 10.05.2025 (2h)
+
+  - Fortschrittsleiste hinzugefügt
+    - mit Prozent und daneben wieviel Fragen von MaxFragen
+  - Todo:
+    - Webquiz-API: will das Thema Allgemein immer vom Server laden -> Fallback lokal, wenn Server nicht erreichbar?
+    - KaTeX Rendering?

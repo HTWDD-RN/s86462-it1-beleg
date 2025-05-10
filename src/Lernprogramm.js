@@ -192,7 +192,10 @@ class Presenter {
         }
         
         View.renderQuestionText(this.question.q);
-        View.renderStatsText("Frage: " + (this.questionNr +1) + "/" + this.m.maxQuestions);
+        View.renderStatsText((this.questionNr +1) + "/" + this.m.maxQuestions);
+        let percent = Math.round((this.questionNr+1) / this.m.maxQuestions * 100); 
+        console.log(percent);
+        View.renderProgressBar(percent);
         View.renderStatusText("Bitte eine Antwort auswählen!")
         
         let shuffledAnswers = [...this.question.a]; // Kopie erstellen
@@ -318,6 +321,12 @@ class View {
         div.replaceChildren(p);
     }
 
+    static renderProgressBar(percent){
+        document.getElementById("progress").style.width = percent + "%";
+        let div = document.getElementById("progress-percent");
+        div.textContent = percent + "%";
+    }
+
     static renderStatsText(text) {
         let div = document.getElementById("stats");
         div.textContent = text;
@@ -325,6 +334,6 @@ class View {
 
     static renderStatusText(text){
         let div = document.getElementById("status-text");
-        div.textContent = "➣ " + text; // Ändert den Textinhalt
+        div.textContent = "➣ " + text;
     }
 }
