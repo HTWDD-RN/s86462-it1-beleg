@@ -53,4 +53,20 @@
   - mehr Statusmeldungen gesetzt und bessere Fehlerbehandlung
   - Todo:
     - Webquiz-API: will das Thema Allgemein immer vom Server laden OK
-    - KaTeX Rendering?
+    - KaTeX Rendering? OK
+
+    ## 11.05.2025 (6h)
+
+    - Ausgewählter Antwortbutton wird nun eingefärbt, ob richtig oder falsch für schnelleres Feedback
+      - style.background Attribut muss entfernt werden, damit das Standardbuttondesign wieder greift
+    - KaTeX Rendering integriert
+      - viel mit Regex versucht nicht gekennzeichnete Formeln in $ ... $ einzuschließen -> funktioniert so semi gut
+      - es wird damit auch erkannt ob es $ ... $ gibt und tut dann nichts an der Frage ändern
+    - KaTeX wird gerendert, wenn eingeschlossen mit $ oder von Regex eine Formel erkannt wird
+    - die Antworten dürfen nicht mit $ eingeschlossen werden (passiert automatisch)
+    - Überprüfung der Antworten: da dafür der Buttontext verwendet wird und Katex diesen ändert muss ich diese in einem Array zwischenspeichern
+    - Bug: beim Klick auf Button passiert nichts??? -> geschiet durch renderKatex :(
+      -> das Problem war das man auf den Katex Text klicken kann und dies auch den Event Handler triggert, aber da dies vom Typ kein Button ist passiert nichts
+      -> gelöst indem Pointerevents für katex-display und span abgeschaltet werden
+    - !important ist wichtig, damit Katex CSS übernommen wird
+    - beim Versuch Katex herunterzuladen ist meine Seite auf Firefox Android eingefroren -> hab Katex heruntergeladen und verwende es lokal, was dieses Problem behoben hat?

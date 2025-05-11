@@ -208,6 +208,25 @@ hr {
     border-top: 1px solid #cccccc;
 }
 
+/* KaTeX */
+.katex {
+    pointer-events: none; 
+}
+
+.katex-display{
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
+    pointer-events: none; /* damit beim Klick auf Katex Buttontext immer was passiert */
+}
+span{
+    margin: 0;
+    padding: 0em;
+    line-height: 1;
+
+    pointer-events: none; /* damit beim Klick auf Katex Buttontext immer was passiert */
+}
+
 /* Quiz-Bereich */
 main {
     background: linear-gradient(to top, #2B3C70, #5F6C9C);

@@ -1,12 +1,11 @@
 "use strict";
-
 //let p, v, m;
 document.addEventListener('DOMContentLoaded', function () {
     let m = new Model();
     let p = new Presenter();
     let v = new View(p);
     p.setModelAndView(m, v);
-    View.setQuestionButtonsDisabled(true);
+    View.setAnswerButtonsDisabled(true);
 });
 
 // Fisher–Yates shuffle
@@ -74,10 +73,10 @@ class Model {
             // curl --user eric.hue@web.de:SecretAmazingPW\!\1\! -X GET https://idefix.informatik.htw-dresden.de:8888/api/quizzes/1959
             this.roundStarted = 1;
 
-            const quizIdStart = 1950;
+            //const quizIdStart = 149;
+            //const quizIdEnd = 248;
+            const quizIdStart = 1940;
             const quizIdEnd = 1961;
-            //const quizIdStart = 1900;
-            //const quizIdEnd = 1961;
             const quizIdNum = (quizIdEnd - quizIdStart) +1;
 
             const headers = new Headers();
@@ -87,7 +86,7 @@ class Model {
             this.questions = [];
             //this.questions = new Array(quizIdNum);
             console.log("HELLO");
-            for (let quizId = quizIdStart -1; quizId <= quizIdEnd; quizId++){
+            for (let quizId = quizIdStart; quizId <= quizIdEnd; quizId++){
                 View.renderQuestionText("Laden... (ID: " + quizId + "/" + quizIdEnd + ")");
                 console.log("Getting ID: " + quizId);
 
@@ -202,8 +201,10 @@ class Presenter {
 
         this.question = null;
         this.questionNr = -1;
-        this.correctQuestions = 0;
+        this.mathQuestion = 0;
+        this.shuffledAnswers = null; // Array für Antworten auf Btns
 
+        this.correctQuestions = 0;
         this.arrayCreated = 0;
         this.questionLog = null;
     }
@@ -234,20 +235,48 @@ class Presenter {
                 answerString = this.questionLog[i][1]
             }
             // kein <br> in Fragen
-            question = this.m.questions[i].q.replace("<br>", " ");
-
+            //question = this.m.questions[i].q.replace(/<br\s*\/?>/gi, " ");
+            question = this.m.questions[i].q.replaceAll("<br>", " ");
+            // kein $ für Mathe in Fragen
+            question = question.replaceAll("$", "");
             summaryString = summaryString + answerStatus + " " + (i+1) + ". " + question + ": " + answerString + correctionString  + "<br>";
         }
         return summaryString;
     }
 
+    // String mit KatexZeilen und normalen Textzeilen erstellen
+    createMultilineMathTextStr(){
+        let lines = this.question.q.split(/<br\s*\/?>/gi); // an <br> splitten
+        let mathLines = [];
+        let textLines = [];
+
+        for (let line of lines) {
+            // Mathezeile enthält Operatoren, Zahlen, xyz?
+            if (/.*[abxyz\d]\s*[+\-*/^=]\s*[abxyz?\d].*/.test(line.trim())) {
+                mathLines.push(line);
+            } else {
+                textLines.push(line);
+            }
+        }
+
+        let katexContent = "";
+        if (mathLines.length > 0) {
+            katexContent += "$" + mathLines.join(" \\\\ ") + "$"; // Mathezeile zusammenfügen, Zeilenumbruch ist \\\\
+        }
+        let textContent = textLines.join("<br>"); // Textzeile zusammefügen, Zeilenumbruch ist <br>
+
+        return textContent + "<br>" + katexContent;
+    }
+
     // Holt eine neue Frage aus dem Model und setzt die View
     async setQuestion() {
         View.setNewQuestionBtnDisabled(true);
-        View.setQuestionButtonsDisabled(true);
+        View.setAnswerButtonsDisabled(true);
+        View.colorAnswerButtons("default", 0);
         View.renderProgressBar(0);
         View.renderStatsText("0/0");
         View.renderStatusText("Bitte warten!")
+        this.mathQuestion = 0;
         this.questionNr++;
        
         View.renderQuestionText("Laden...");
@@ -264,7 +293,7 @@ class Presenter {
             // Hier eine Übersicht anzeigen (wieviel richtig?)
             View.setEndscreen("enabled");
             // Buttons deaktivieren
-            View.setQuestionButtonsDisabled(true);
+            View.setAnswerButtonsDisabled(true);
             View.setNewQuestionBtnDisabled(false);
             View.renderProgressBar(100);
             View.renderStatsText((this.m.maxQuestions) + "/" + this.m.maxQuestions);
@@ -275,7 +304,7 @@ class Presenter {
             //console.log("SummaryStr: " + summaryString);
 
             let percentageCorrect = Math.round(this.correctQuestions / this.m.maxQuestions * 100);
-            View.renderQuestionText("Alle Fragen beantwortet!<br>Richtig beantwortet: " + this.correctQuestions + " von " + this.m.maxQuestions + " (" + percentageCorrect + "%)");
+            View.renderQuestionText("<b>Alle Fragen beantwortet!</b><br>Richtig beantwortet: " + this.correctQuestions + " von " + this.m.maxQuestions + " (" + percentageCorrect + "%)");
 
             this.m.roundStarted = 0; // neue Runde -> reset
             this.reset();
@@ -311,56 +340,90 @@ class Presenter {
             this.arrayCreated = 1;
         }
         
-        View.renderQuestionText(this.question.q);
+        // Regex zur Erkennung, ob Formeln in $ ... $ eingeschlossen
+        if (/.*\$.*\$.*/.test(this.question.q.trim())){
+            console.log("Text contains Math in $ ... $!");
+            let renderText = this.question.q.replace(/<br\s*\/?>/gi, "");
+            View.renderQuestionText(renderText); // <br> löschen
+            this.mathQuestion = 1;
+        } 
+        // Regex zur Erkennung von Matheaufgaben: .* = alle Zeichen, [abxyz?\d] = abxyz? oder Zahlen, \s* = beliebige Anzahl Leerzeichen, [+-*/^=] = Operator
+        else if (/.*[abxyz\d]\s*[+\-*/^=]\s*[abxyz?\d].*/.test(this.question.q.trim())) {
+            console.log("Text contains Math!");
+            if (this.question.q.includes("<br>")){ // mehrzeilige Formeln + Text
+                let text = this.createMultilineMathTextStr();
+                View.renderQuestionText(text);
+            }
+            else{ // einzeilige Formeln
+                View.renderQuestionText("$" + this.question.q + "$");
+            }
+            this.mathQuestion = 1;
+        }
+        else{
+            View.renderQuestionText(this.question.q);
+        }
+
         View.renderStatsText((this.questionNr +1) + "/" + this.m.maxQuestions);
         let percent = Math.round((this.questionNr+1) / this.m.maxQuestions * 100); 
         //console.log(percent);
         View.renderProgressBar(percent);
         View.renderStatusText("Bitte eine Antwort auswählen!")
         
-        let shuffledAnswers = [...this.question.a]; // Kopie erstellen
-        shuffleArray(shuffledAnswers); // random Antworten
+        this.shuffledAnswers = [...this.question.a]; // Kopie erstellen
+        shuffleArray(this.shuffledAnswers); // random Antworten
         
-        console.log(shuffledAnswers);
+        console.log(this.shuffledAnswers);
         
         for (let i = 0; i < 4; i++) {
-            let text = shuffledAnswers[i];
+            let text = this.shuffledAnswers[i];
+            if (this.mathQuestion == 1){
+                text = "$" + this.shuffledAnswers[i] + "$";
+            }
             let pos = i;
             View.inscribeButtons(i, text, pos); // Tasten beschriften -> View -> Antworten
         }
+
+        // Mathe rendern 
+        if (this.mathQuestion == 1){
+            View.renderKatex("question");
+            View.renderKatex("answer-btn");
+        }
         View.setNewQuestionBtnDisabled(false);
-        View.setQuestionButtonsDisabled(false);
+        View.setAnswerButtonsDisabled(false);
     }
 
     // Prüft die Antwort, aktualisiert Statistik und setzt die View
     async checkAnswer(answer) {
         View.renderStatusText("Überprüfe Antwort...")
         View.setNewQuestionBtnDisabled(true);
-        View.setQuestionButtonsDisabled(true);
+        View.setAnswerButtonsDisabled(true);
+
+        const buttonText = this.shuffledAnswers[answer];
+        console.log("BUTTON TEXT: "+ buttonText);
+        
         console.log("Lösung: " + this.question.a[0]);
-        console.log("Button-Antwort: " + document.querySelectorAll("#answer-btn > *")[answer].textContent);
+        console.log("Button-Antwort: " + buttonText);
 
         if (this.m.topic != "allgemeinSrv"){ // lokale Fragen
-            console.log("LOKAL");
-            if (this.question.a[0] == document.querySelectorAll("#answer-btn > *")[answer].textContent){ // Aufgabentext == Buttontext?
+            if (this.question.a[0] == buttonText){ // Aufgabentext == Buttontext?
                 console.log("Richtige Antwort!");
                 View.renderStatusText("✅ Richtige Antwort!");
+                View.colorAnswerButtons("correct", answer);
 
                 this.correctQuestions++;
-                this.questionLog[this.questionNr] = [1, document.querySelectorAll("#answer-btn > *")[answer].textContent];
+                this.questionLog[this.questionNr] = [1, buttonText];
             } 
             else{
                 console.log("Falsche Antwort! Richtig ist: " + this.question.a[0]);
                 View.renderStatusText("❌ Falsche Antwort! Richtig ist: " + this.question.a[0]);
+                View.colorAnswerButtons("false", answer);
 
-                this.questionLog[this.questionNr] = [-1, document.querySelectorAll("#answer-btn > *")[answer].textContent];
+                this.questionLog[this.questionNr] = [-1, buttonText];
             }
         }
         else if (this.m.topic === "allgemeinSrv"){ // Online Fragen -> Server Check
-            console.log("ONLINE");
             // Antwort Zahl rausbekommen
             let answerNum = 0;
-            let buttonText = document.querySelectorAll("#answer-btn > *")[answer].textContent;
             for (let i=0; i<4; i++){
                 //console.log("Text: " + buttonText);
                 //console.log("Question: " + this.question.a[i]);
@@ -380,15 +443,17 @@ class Presenter {
             if (correct == 1){ // richtig
                 console.log("Richtige Antwort!");
                 View.renderStatusText("✅ Richtige Antwort!");
+                View.colorAnswerButtons("correct", answer);
 
                 this.correctQuestions++;
-                this.questionLog[this.questionNr] = [1, document.querySelectorAll("#answer-btn > *")[answer].textContent];
+                this.questionLog[this.questionNr] = [1, buttonText];
             }
             else { // falsch
                 console.log("Falsche Antwort!");
                 View.renderStatusText("❌ Falsche Antwort!");
+                View.colorAnswerButtons("false", answer);
 
-                this.questionLog[this.questionNr] = [-1, document.querySelectorAll("#answer-btn > *")[answer].textContent];
+                this.questionLog[this.questionNr] = [-1, buttonText];
             }
         }
         console.log("Question Array: " + this.questionLog);
@@ -401,6 +466,38 @@ class View {
     constructor(p) {
         this.p = p;  // Presenter
         this.setHandler();
+    }
+
+    static renderKatex(elemName){
+        let elem = null;
+        
+        if (elemName === "answer-btn"){ // alle Buttons durchgehen
+            for (let i = 0; i < 4; i++){
+                elem = document.querySelectorAll("#answer-btn > *")[i];
+                console.log("Rendering in: " + elem);
+                renderMathInElement(elem, {
+                    delimiters: [
+                        {left: "$", right: "$", display: true},
+                        {left: "$$", right: "$$", display: true},
+                        {left: "\\(", right: "\\)", display: false},
+                        {left: "\\[", right: "\\]", display: true}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+        else{ // einzelnes Element
+            elem = document.getElementById(elemName);
+            renderMathInElement(elem, {
+                delimiters: [
+                    {left: "$", right: "$", display: true},
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ],
+                throwOnError: false
+            });
+        }
     }
 
     setHandler() {
@@ -426,7 +523,22 @@ class View {
         document.querySelectorAll("#answer-btn > *")[i].setAttribute("number", pos);
     }
 
-    static setQuestionButtonsDisabled(disabled_bool){
+    static colorAnswerButtons(colortype, num){
+        // background: linear-gradient(to bottom, #2B3C70, #5F6C9C);
+        if (colortype === "correct"){
+            document.querySelectorAll("#answer-btn > *")[num].style.background = "linear-gradient(to bottom, #2b704a, #5f9c73)";
+        }
+        else if (colortype === "false"){
+            document.querySelectorAll("#answer-btn > *")[num].style.background = "linear-gradient(to bottom, #91393d, #9c5f67";
+        }
+        else if (colortype === "default"){
+            for (let i = 0; i < 4; i++){
+                document.querySelectorAll("#answer-btn > *")[i].style.removeProperty("background");
+            }
+        }
+    }
+
+    static setAnswerButtonsDisabled(disabled_bool){
         for (let i = 0; i < 4; i++){
             document.querySelectorAll("#answer-btn > *")[i].disabled = disabled_bool;
         }
@@ -443,7 +555,7 @@ class View {
                 document.querySelectorAll("#answer-btn > *")[i].style.display = "none";
             }
             document.getElementById("end-screen-text").style.display = "block";
-            View.setQuestionButtonsDisabled(true);
+            View.setAnswerButtonsDisabled(true);
         }
         else if (action == "disabled"){
             for (let i = 0; i < 4; i++){
@@ -470,6 +582,8 @@ class View {
     
     checkEvent(event) {
         console.log(event.type);
+        console.log("Clicked target:", event.target);
+
         if (event.target.nodeName === "BUTTON") {
             this.p.checkAnswer(Number(event.target.attributes.getNamedItem("number").value));
         }
