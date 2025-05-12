@@ -64,27 +64,33 @@ class Model {
                     });
         
                     if (response.ok) {
-                        console.log("SAVING");
-                        const cache = await caches.open(this.cacheName);
-                        await cache.delete('./questions.json');
-                        await cache.put('./questions.json', response.clone());  // Antwort trotzdem im Cache speichern xD
+                        if ('caches' in window) { // http hat keinen Cache
+                            console.log("SAVING");
+                            const cache = await caches.open(this.cacheName);
+                            await cache.delete('./questions.json');
+                            await cache.put('./questions.json', response.clone());  // Antwort trotzdem im Cache speichern xD
+                        }
                     }
                 } else {
                     console.log("OFFLINE");
-                    // aus Cache laden
-                    response = await caches.match('./questions.json');
-                    if (!response) {
-                        alert('Keine Internetverbindung und keine Caching-Daten gefunden.');
-                        return null;
+                    if ('caches' in window) { // http hat keinen Cache
+                        // aus Cache laden
+                        response = await caches.match('./questions.json');
+                        if (!response) {
+                            alert('Keine Internetverbindung und keine Caching-Daten gefunden.');
+                            return null;
+                        }
                     }
                 }
             } catch (error) {
-                 // aus Cache laden
-                 response = await caches.match('./questions.json');
-                 if (!response) {
-                     alert('Keine Verbindung zum Server und keine Caching-Daten gefunden.');
-                     return null;
-                 }
+                if ('caches' in window) { // http hat keinen Cache
+                    // aus Cache laden
+                    response = await caches.match('./questions.json');
+                    if (!response) {
+                        alert('Keine Verbindung zum Server und keine Caching-Daten gefunden.');
+                        return null;
+                    }
+                }
                 //alert("Es muss wegen CORS diese Seite auf einem Server gehostet sein, damit JSON Daten geladen werden können!\nError: " + error)
                 console.error('Fehler beim Laden der Daten:', error);
             }
