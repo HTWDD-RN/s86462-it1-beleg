@@ -44,8 +44,6 @@ const filesToCache = [
     "/scripts/katex/fonts/KaTeX_Typewriter-Regular.woff2"
 ];
 
-caches.delete(cacheName); // alten Cache löschen
-
 // Warte bis SW installiert
 self.addEventListener('install', function(event) {
     event.waitUntil(
