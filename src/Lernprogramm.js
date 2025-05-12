@@ -8,6 +8,13 @@ document.addEventListener('DOMContentLoaded', function () {
     View.setAnswerButtonsDisabled(true);
 });
 
+// Service Worker registrieren für PWA
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log(reg))
+        .catch(err => console.log(err))
+}
+
 // Fisher–Yates shuffle
 function shuffleArray(array) { 
     for (let i = array.length - 1; i >= 1; i--) {
@@ -26,6 +33,8 @@ class Model {
 
         this.username = "eric.hue@web.de";
         this.password = "SecretAmazingPW!1!"; // sehr sicher lol
+
+        this.cacheName = "Lernprog-PWA1";
     }
 
     // Holt eine Frage aus dem JSON oder vom Server
@@ -33,41 +42,73 @@ class Model {
         // lokale Fragen
         this.topic = View.getTopic();
         if (this.roundStarted != 1 && this.topic != "allgemeinSrv"){ // nur neuladen aus Datei, wenn neue Runde oder neues Thema
+            let response;
             try {
                 this.roundStarted = 1;
-
-                const response = await fetch('./questions.json', {cache: "no-store"}); // no-store verhindert cache
-                const data = await response.json();
                 
-                // nach Typ die richtigen Fragen auswählen
-                this.topic = View.getTopic();
-                console.log("Topic: " + this.topic);
-                if (this.topic === "allgemein"){
-                    shuffleArray(data.allgemein);
-                    this.questions = data.allgemein;
-                }
-                else if (this.topic === "web"){
-                    shuffleArray(data.web);
-                    this.questions = data.web;
-                }
-                else if (this.topic === "mathe"){
-                    shuffleArray(data.mathe);
-                    this.questions = data.mathe;
-                }
-                else if (this.topic === "minecraft"){
-                    shuffleArray(data.minecraft);
-                    this.questions = data.minecraft;
-                }
-
-                console.log(this.questions);
+                const controller = new AbortController();
+                setTimeout(() => controller.abort(), 2000); // 2000ms Timeout, Nutzer sollte hier nicht zu lange auf Cache warten
                 
-                // get maxQuestions im Thema
-                this.maxQuestions = this.questions.length;
+                if (navigator.onLine) {
+                    console.log("ONLINE");
+                    // Wenn online neuste Datei vom Server
+                    response = await fetch("./questions.json", {
+                        cache: 'no-store',
+                        signal: controller.signal
+                    });
+        
+                    if (response.ok) {
+                        console.log("SAVING");
+                        const cache = await caches.open(this.cacheName);
+                        await cache.delete('./questions.json');
+                        await cache.put('./questions.json', response.clone());  // Antwort trotzdem im Cache speichern xD
+                    }
+                } else {
+                    console.log("OFFLINE");
+                    // aus Cache laden
+                    response = await caches.match('./questions.json');
+                    if (!response) {
+                        alert('Keine Internetverbindung und keine Caching-Daten gefunden.');
+                        return null;
+                    }
+                }
             } catch (error) {
-                alert("Es muss wegen CORS diese Seite auf einem Server gehostet sein, damit JSON Daten geladen werden können!\nError: " + error)
+                 // aus Cache laden
+                 response = await caches.match('./questions.json');
+                 if (!response) {
+                     alert('Keine Verbindung zum Server und keine Caching-Daten gefunden.');
+                     return null;
+                 }
+                //alert("Es muss wegen CORS diese Seite auf einem Server gehostet sein, damit JSON Daten geladen werden können!\nError: " + error)
                 console.error('Fehler beim Laden der Daten:', error);
-                return null; // Fehlerbehandlung    
             }
+            const data = await response.json();
+            
+            // nach Typ die richtigen Fragen auswählen
+            this.topic = View.getTopic();
+            console.log("Topic: " + this.topic);
+            if (this.topic === "allgemein"){
+                shuffleArray(data.allgemein);
+                this.questions = data.allgemein;
+            }
+            else if (this.topic === "web"){
+                shuffleArray(data.web);
+                this.questions = data.web;
+            }
+            else if (this.topic === "mathe"){
+                shuffleArray(data.mathe);
+                this.questions = data.mathe;
+            }
+            else if (this.topic === "minecraft"){
+                shuffleArray(data.minecraft);
+                this.questions = data.minecraft;
+            }
+
+            console.log(this.questions);
+            
+            // get maxQuestions im Thema
+            this.maxQuestions = this.questions.length;
+            
         }
         else if (this.roundStarted != 1 && this.topic === "allgemeinSrv"){ // Online Fragen
             // curl --user eric.hue@web.de:SecretAmazingPW\!\1\! -X GET https://idefix.informatik.htw-dresden.de:8888/api/quizzes/1959
@@ -75,8 +116,9 @@ class Model {
 
             //const quizIdStart = 149;
             //const quizIdEnd = 248;
-            const quizIdStart = 1940;
-            const quizIdEnd = 1961;
+            // 1950-1961
+            const quizIdStart = 317;
+            const quizIdEnd = 334;
             const quizIdNum = (quizIdEnd - quizIdStart) +1;
 
             const headers = new Headers();
@@ -261,7 +303,7 @@ class Presenter {
 
         let katexContent = "";
         if (mathLines.length > 0) {
-            katexContent += "$" + mathLines.join(" \\\\ ") + "$"; // Mathezeile zusammenfügen, Zeilenumbruch ist \\\\
+            katexContent += "$" + mathLines.join(" \\\\ ") + "$"; // Mathezeile zusammenfügen, Zeilenumbruch ist \\
         }
         let textContent = textLines.join("<br>"); // Textzeile zusammefügen, Zeilenumbruch ist <br>
 
@@ -343,11 +385,11 @@ class Presenter {
         // Regex zur Erkennung, ob Formeln in $ ... $ eingeschlossen
         if (/.*\$.*\$.*/.test(this.question.q.trim())){
             console.log("Text contains Math in $ ... $!");
-            let renderText = this.question.q.replace(/<br\s*\/?>/gi, "");
-            View.renderQuestionText(renderText); // <br> löschen
+            let renderText = this.question.q.replace(/<br\s*\/?>/gi, "");  // <br> löschen
+            View.renderQuestionText(renderText);
             this.mathQuestion = 1;
         } 
-        // Regex zur Erkennung von Matheaufgaben: .* = alle Zeichen, [abxyz?\d] = abxyz? oder Zahlen, \s* = beliebige Anzahl Leerzeichen, [+-*/^=] = Operator
+        // Regex zur Erkennung von Matheaufgaben ohne $: .* = alle Zeichen, [abxyz?\d] = abxyz? oder Zahlen, \s* = beliebige Anzahl Leerzeichen, [+-*/^=] = Operator
         else if (/.*[abxyz\d]\s*[+\-*/^=]\s*[abxyz?\d].*/.test(this.question.q.trim())) {
             console.log("Text contains Math!");
             if (this.question.q.includes("<br>")){ // mehrzeilige Formeln + Text
@@ -479,7 +521,7 @@ class View {
                     delimiters: [
                         {left: "$", right: "$", display: true},
                         {left: "$$", right: "$$", display: true},
-                        {left: "\\(", right: "\\)", display: false},
+                        {left: "\\(", right: "\\)", display: true},
                         {left: "\\[", right: "\\]", display: true}
                     ],
                     throwOnError: false
@@ -492,7 +534,7 @@ class View {
                 delimiters: [
                     {left: "$", right: "$", display: true},
                     {left: "$$", right: "$$", display: true},
-                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\(", right: "\\)", display: true},
                     {left: "\\[", right: "\\]", display: true}
                 ],
                 throwOnError: false

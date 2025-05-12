@@ -18,7 +18,11 @@
     {"q": "Was ist das Ziel von HTTPS im Vergleich zu HTTP?", "a": ["Verschlüsselung der Verbindung", "Schnellere Ladezeiten", "Weniger Werbung", "Reduzierter Datenverbrauch"] },
     {"q": "Was beschreibt ein REST-API am besten?", "a": ["Zustandslose Kommunikation über HTTP", "Dateibasiertes Datenbanksystem", "Ein Verschlüsselungsverfahren", "Ein Webserver-Protokoll"] },
     {"q": "Welche Methode wird typischerweise verwendet, um Daten an einen Server zu senden?", "a": ["POST", "GET", "PUT", "FETCH"] },
-    {"q": "Welcher Port wird standardmäßig für HTTP verwendet?", "a": ["80", "443", "21", "22"] }
+    {"q": "Welcher Port wird standardmäßig für HTTP verwendet?", "a": ["80", "443", "21", "22"] },
+    {"q": "Welche Sprache wird hauptsächlich verwendet, um Webseiten zu strukturieren?", "a": ["HTML", "CSS", "JavaScript", "Python"]},
+    {"q": "Wofür steht die Abkürzung URL?", "a": ["Uniform Resource Locator", "Universal Routing Layer", "Unified Request Link", "User Resource List"]},
+    {"q": "Welche Technik wird verwendet, um Webseiten ohne Neuladen zu aktualisieren?", "a": ["AJAX", "FTP", "DNS", "SOAP"]},
+    {"q": "Was bedeutet responsives Design?", "a": ["Anpassung an verschiedene Bildschirmgrößen", "Reaktion auf Benutzerfeedback", "Schnelles Laden bei schlechter Verbindung", "Automatische Sprachübersetzung"]}
     ],
   "allgemein": [
     {"q": "Karl der Große, Geburtsjahr", "a": ["747","828","650","1150"]}

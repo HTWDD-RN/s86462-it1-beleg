@@ -70,3 +70,21 @@
   -> gelöst indem Pointerevents für katex-display und span abgeschaltet werden
 - !important ist wichtig, damit Katex CSS übernommen wird
 - beim Versuch Katex herunterzuladen ist meine Seite auf Firefox Android eingefroren -> hab Katex heruntergeladen und verwende es lokal, was dieses Problem behoben hat?
+
+- Todo:
+  - ServiceWorker für PWA hinzufügen mit Cache für Offline Nutzung OK
+  - App Icon OK
+  - Fehlende Datei überprüfen (manifest?) OK
+  - bessere Check wenn Offline? OK
+
+  ## 12.05.2025 (8h)
+
+- ServiceWorker mit Cache für Offline Nutzung hinzugefügt
+  - geht irgendwie nicht ohne HTTPS aber Firefox meckert das es den Zertifikataussteller nicht kennt
+  - Registrierung schlägt fehl mit: DOMException: The operation is insecure.
+  -> ich glaube es hat zum ersten Mal funktioniert!!! Indem ich den service-worker.js ins Hauptverzeichnis / gepackt habe lädt die Seite nun offline. Vorher hatte es wohl Probleme, da es in /scripts/ war und ich den scope nicht ohne DOMException auf / setzen konnte
+  -> falls ein Pfad nicht existiert, installiert der SW nicht korrekt und es gibt keine Fehlermeldung
+- Firefox scheint im Gegensatz zu Chrome das Manifest zu ignorieren und nutzt einfach das Favicon (nein, FF erwartet halt nur mehr)
+  - auch die Manifest jetzt so bearbeitet, dass es so offnet wie die HTWDmobil PWA im Fullscreen!
+- Ich lade immer die neusten Ressourcen wenn online, tu aber wenn offline aus dem Cache laden :)
+  - sonst auch den Edge Case, wenn man Online ist, aber der Server mit questions.json nicht erreichbar ist besser gehandelt

@@ -33,8 +33,17 @@ header {
     text-shadow: 1em darkblue;
     color: white;
     background: #000000 url(../images/back.jpg) no-repeat left top;
-    background-size:cover;
+    background-size: cover;
     margin-bottom: 1em;
+}
+
+.title-flex-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: auto;
+    
+    justify-content: center;
 }
 
 /* Aufgabentyp-Auswahl */

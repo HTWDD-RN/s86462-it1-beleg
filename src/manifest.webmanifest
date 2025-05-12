@@ -1,0 +1,44 @@
+{
+    "short_name": "Lernprog",
+    "name": "Lernprogramm",
+    "description": "Lernprogramm mit jew. 4  Antwortmöglichkeiten als Beleg in Webprogrammierung von Eric Hübel (s86462)",
+    "icons": [
+        {
+            "src": "/images/icon_pwa_192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/images/icon_pwa_192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/images/icon_pwa_512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "background_color": "#233164", 
+    "theme_color": "#233164",
+    "scope": "/",
+    "start_url": "/src/Lernprogramm.html",
+    "launch_handler": {
+        "client_mode": "auto"
+    },
+    "orientation": "any",
+    "display": "standalone",
+    "display_override": [
+        "standalone",
+        "fullscreen",
+        "minimal-ui",
+        "window-controls-overlay",
+        "browser"
+      ],
+    "dir": "ltr",
+    "lang": "de"
+  }
+  
