@@ -9,7 +9,15 @@
     {"q": "$\\sqrt{16} = $", "a": ["4", "8", "2", "\\frac{1}{4}"]},
     {"q": "$x^2 = 25$<br>$x = ?$", "a": ["5", "-5", "25", "10"]},
     {"q": "$\\frac{3}{4} - \\frac{1}{2} = $", "a": ["\\frac{1}{4}", "\\frac{1}{2}", "\\frac{3}{2}", "\\frac{2}{4}"]},
-    {"q": "$\\sqrt{49} = $", "a": ["7", "5", "6", "3"]}
+    {"q": "$\\sqrt{49} = $", "a": ["7", "5", "6", "3"]},
+    {"q": "$\\int_0^1 x^2 \\, dx =$", "a": ["\\frac{1}{3}", "\\frac{1}{2}", "1", "0"]},
+    {"q": "$\\lim_{x \\to 0} \\frac{\\sin x}{x} =$", "a": ["1", "0", "\\infty", "x"]},
+    {"q": "$\\frac{d}{dx} \\left(x^3\\right) =$", "a": ["3x^2", "x^2", "3x", "x^3"]},
+    {"q": "$e^{i\\pi} + 1 =$", "a": ["0", "1", "-1", "\\pi"]},
+    {"q": "$(a + b)^2 =$", "a": ["a^2 + 2ab + b^2", "a^2 + b^2", "2a^2 + b^2", "a^2 + ab + b^2"]},
+    {"q": "$\\log_{10}(1000) =$", "a": ["3", "2", "10", "100"]},
+    {"q": "$\\binom{5}{2} =$", "a": ["10", "5", "15", "20"]},
+    {"q": "$\\sum_{k=1}^{4} k =$", "a": ["10", "6", "4", "8"]}
     ],
   "web": [
     {"q": "Welche Authentifizierung bietet HTTP?", "a": ["Digest Access Authentication","OTP","OAuth","2-Faktor-Authentifizierung"]},
@@ -22,8 +30,10 @@
     {"q": "Welche Sprache wird hauptsächlich verwendet, um Webseiten zu strukturieren?", "a": ["HTML", "CSS", "JavaScript", "Python"]},
     {"q": "Wofür steht die Abkürzung URL?", "a": ["Uniform Resource Locator", "Universal Routing Layer", "Unified Request Link", "User Resource List"]},
     {"q": "Welche Technik wird verwendet, um Webseiten ohne Neuladen zu aktualisieren?", "a": ["AJAX", "FTP", "DNS", "SOAP"]},
-    {"q": "Was bedeutet responsives Design?", "a": ["Anpassung an verschiedene Bildschirmgrößen", "Reaktion auf Benutzerfeedback", "Schnelles Laden bei schlechter Verbindung", "Automatische Sprachübersetzung"]}
-    ],
+    {"q": "Was bedeutet responsives Design?", "a": ["Anpassung an verschiedene Bildschirmgrößen", "Reaktion auf Benutzerfeedback", "Schnelles Laden bei schlechter Verbindung", "Automatische Sprachübersetzung"]},
+    {"q": "Was bedeutet CORS?", "a": ["Cross-Origin Resource Sharing", "Core Objective Requesting Service", "Client-Origin Resource Secure", "Common Online Request Standard"]},
+    {"q": "Was ist der Unterschied zwischen 'var', 'let' und 'const'?", "a": ["'var' ist global oder funktionsbasiert, 'let' und 'const' sind blockbasiert", "'let' und 'const' sind nur innerhalb von Funktionen gültig", "'var' kann nicht verändert werden", "'let' ist nur für Funktionen gedacht"]}
+  ],
   "allgemein": [
     {"q": "Karl der Große, Geburtsjahr", "a": ["747","828","650","1150"]}
     ],
@@ -37,10 +47,12 @@
     {"q": "Was macht '/reload' auf einem Server?", "a": ["Lädt Funktionen und Datapacks neu", "Startet den Server neu", "Leert den Chat", "Gibt alle Items zurück"]},
     {"q": "Was bewirkt '/tp @p ~ ~10 ~'?", "a": ["Teleportiert den Spieler 10 Blöcke nach oben", "Teleportiert alle Spieler auf Y=10", "Teleportiert den nächsten Spieler zu Koordinaten 0,10,0", "Teleportiert den Spieler 10 Blöcke nach vorne"]},
     {"q": "Wann ist Minecraft Release 1.0 erschienen?", "a": ["18.11.2011", "11.11.2011", "25.11.2011", "04.11.2011"]},
-    {"q": "Wieviele neue Dimensionen wurden im Easter-Egg Snapshot 20w14infinite hinzugefügt?", "a": ["2.147.483.645", "2.147.483.648", "18.446.744.073.709.551.615", "18.446.744.073.709.551.612"]}
+    {"q": "Wieviele neue Dimensionen wurden im Easter-Egg Snapshot 20w14infinite hinzugefügt?", "a": ["2.147.483.645", "2.147.483.648", "18.446.744.073.709.551.615", "18.446.744.073.709.551.612"]},
+    {"q": "Was passiert beim Schlafen in einem Bett im Nether?", "a": ["Es explodiert", "Der Spawnpunkt wird gesetzt", "Es heilt den Spieler", "Es funktioniert wie im Overworld"]},
+    {"q": "Welcher dieser Blöcke fällt, wenn kein Block unter ihm ist?", "a": ["Sand", "Stein", "Erz", "Holz"]}
   ],
   "noten": [
     {"q": "C4", "a": ["C","D","E","H"]},
     {"q": "(C4 E4 G4)", "a": ["C", "H", "F", "D"]}
-    ]       
+    ]
 }

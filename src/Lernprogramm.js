@@ -48,12 +48,18 @@ class Model {
                 
                 const controller = new AbortController();
                 setTimeout(() => controller.abort(), 2000); // 2000ms Timeout, Nutzer sollte hier nicht zu lange auf Cache warten
-                
+
                 if (navigator.onLine) {
                     console.log("ONLINE");
-                    // Wenn online neuste Datei vom Server
+                    // Wenn online neuste Datei vom Server, kein Cache!!
+                    let cacheHeaders = new Headers();
+                    cacheHeaders.append('pragma', 'no-cache');
+                    cacheHeaders.append('cache-control', 'no-cache');
+
                     response = await fetch("./questions.json", {
-                        cache: 'no-store',
+                        method: "GET",
+                        headers: cacheHeaders,
+                        cache: "no-store",
                         signal: controller.signal
                     });
         
@@ -117,8 +123,8 @@ class Model {
             //const quizIdStart = 149;
             //const quizIdEnd = 248;
             // 1950-1961
-            const quizIdStart = 317;
-            const quizIdEnd = 334;
+            const quizIdStart = 149;
+            const quizIdEnd = 248;
             const quizIdNum = (quizIdEnd - quizIdStart) +1;
 
             const headers = new Headers();

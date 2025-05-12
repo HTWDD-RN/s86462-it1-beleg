@@ -77,7 +77,7 @@
   - Fehlende Datei überprüfen (manifest?) OK
   - bessere Check wenn Offline? OK
 
-  ## 12.05.2025 (8h)
+  ## 12.05.2025 (9h)
 
 - ServiceWorker mit Cache für Offline Nutzung hinzugefügt
   - geht irgendwie nicht ohne HTTPS aber Firefox meckert das es den Zertifikataussteller nicht kennt

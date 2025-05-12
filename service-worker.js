@@ -57,6 +57,6 @@ self.addEventListener('install', function(event) {
 
 self.addEventListener('fetch', event => event.respondWith(
     caches.open(cacheName)
-        .then(cache => cache.match(event.request)) // falls im Cache davon laden
         .then(response => response || fetch(event.request))
+        .then(cache => cache.match(event.request)) // falls im Cache davon laden
 ));
