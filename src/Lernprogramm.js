@@ -250,8 +250,13 @@ class Presenter {
         this.questionNr = -1;
         this.correctQuestions = 0;
 
+        this.mathQuestion = 0;
+        this.noteQuestion = 0;
+
         this.arrayCreated = 0;
         this.questionLog = null; // -1: falsch, 0: unabeantwortet, 1: richtig | Ausgewähle Antwort als Text, 0 unbeantwortet
+
+        this.noMillionaere = 1;
     }
 
     setModelAndView(m, v) {
@@ -274,6 +279,8 @@ class Presenter {
         this.correctQuestions = 0;
         this.arrayCreated = 0;
         this.questionLog = null;
+
+        this.noMillionaere = 1;
     }
 
     // String für Endbildschirm mit Zusammenfassung der Ergebnisse
@@ -374,7 +381,16 @@ class Presenter {
             //console.log("SummaryStr: " + summaryString);
 
             let percentageCorrect = Math.round(this.correctQuestions / this.m.maxQuestions * 100);
-            View.renderQuestionText("<b>Alle Fragen beantwortet!</b><br>Richtig beantwortet: " + this.correctQuestions + " von " + this.m.maxQuestions + " (" + percentageCorrect + "%)");
+
+            if (curtopic === "WwM" && this.noMillionaere == 1){
+                View.renderQuestionText("<b>Du bist leider kein Millionär geworden!</b><br>Richtig beantwortet: " + this.correctQuestions + " von " + this.m.maxQuestions + " (" + percentageCorrect + "%)");
+            }
+            else if (curtopic === "WwM" && this.noMillionaere == 0){
+                View.renderQuestionText("<b>Du bist ein Millionär geworden!</b><br>Richtig beantwortet: " + this.correctQuestions + " von " + this.m.maxQuestions + " (" + percentageCorrect + "%)");
+            }
+            else{    
+                View.renderQuestionText("<b>Alle Fragen beantwortet!</b><br>Richtig beantwortet: " + this.correctQuestions + " von " + this.m.maxQuestions + " (" + percentageCorrect + "%)");
+            }
 
             this.m.roundStarted = 0; // neue Runde -> reset
             this.reset();
@@ -493,6 +509,11 @@ class Presenter {
 
                 this.correctQuestions++;
                 this.questionLog[this.questionNr] = [1, buttonText];
+
+                // letzte Frage korrekt -> Millionär
+                if (View.getTopic() === "WwM" && this.correctQuestions == this.m.maxQuestions){
+                    this.noMillionaere = 0;
+                }
             } 
             else{
                 console.log("Falsche Antwort! Richtig ist: " + this.question.a[0]);
@@ -500,6 +521,12 @@ class Presenter {
                 View.colorAnswerButtons("false", answer);
 
                 this.questionLog[this.questionNr] = [-1, buttonText];
+
+                // doch kein Millionär :( -> nicht weiterspielen 
+                if (View.getTopic() === "WwM"){
+                    this.questionNr = this.m.maxQuestions+1;
+                    this.noMillionaere = 1;
+                }
             }
         }
         else if (this.m.topic === "allgemeinSrv"){ // Online Fragen -> Server Check
