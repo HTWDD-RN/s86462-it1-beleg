@@ -85,6 +85,19 @@
   -> ich glaube es hat zum ersten Mal funktioniert!!! Indem ich den service-worker.js ins Hauptverzeichnis / gepackt habe lädt die Seite nun offline. Vorher hatte es wohl Probleme, da es in /scripts/ war und ich den scope nicht ohne DOMException auf / setzen konnte
   -> falls ein Pfad nicht existiert, installiert der SW nicht korrekt und es gibt keine Fehlermeldung
 - Firefox scheint im Gegensatz zu Chrome das Manifest zu ignorieren und nutzt einfach das Favicon (nein, FF erwartet halt nur mehr)
-  - auch die Manifest jetzt so bearbeitet, dass es so offnet wie die HTWDmobil PWA im Fullscreen!
+  - auch die Manifest jetzt so bearbeitet, dass es so öffnet wie die HTWDmobil PWA im Fullscreen!
 - Ich lade immer die neusten Ressourcen wenn online, tu aber wenn offline aus dem Cache laden :)
   - sonst auch den Edge Case, wenn man Online ist, aber der Server mit questions.json nicht erreichbar ist besser gehandelt
+
+  - Todo:
+   - Cache muss doch gelöscht im SW werden damit Firefox Android auch in der PWA (wenn man ein Icon erstellt) questions.json neulädt
+   -> davor irgendwie checken, ob der Cache existiert (denn sonst scheint es beim Installieren des SW auf Desktop einzufrieren?)
+   -> ist leider auch keine Lösung, da dadurch irgendwann die ganze Website im Offline Modus weg ist
+   -> ich ignoriere das für jetzt (Idee ist Network first, anstatt Cache first)
+
+  # 13.05.2025
+
+  - Dateipfade relativ gemacht, sodass auf dem Informatik Server alles angezeigt wird
+  - manifest.webmanifest auf dem Informatik-Server:
+   "scope": "/~s86462/Lernprogramm/",
+   "start_url": "https://www.informatik.htw-dresden.de/~s86462/Lernprogramm/",
