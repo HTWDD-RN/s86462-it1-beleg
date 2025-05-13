@@ -8,5 +8,6 @@
 - https://icon-icons.com/icon/minecraft-logo/168974
 - https://icon-icons.com/icon/web-earth-server-tower-computer/76733
 - https://icon-icons.com/icon/musical-score/100492
+- https://icon-icons.com/icon/euro/20714
 - https://icon-icons.com/icon/math/241381
 - https://icon-icons.com/icon/consulting-question/16051

@@ -1,4 +1,7 @@
 "use strict";
+
+
+
 //let p, v, m;
 document.addEventListener('DOMContentLoaded', function () {
     let m = new Model();
@@ -110,6 +113,9 @@ class Model {
             else if (this.topic === "mathe"){
                 shuffleArray(data.mathe);
                 this.questions = data.mathe;
+            }
+            else if (this.topic === "WwM"){
+                this.questions = data.WwM;
             }
             else if (this.topic === "notes"){
                 shuffleArray(data.notes);
@@ -259,7 +265,10 @@ class Presenter {
 
         this.question = null;
         this.questionNr = -1;
+        
         this.mathQuestion = 0;
+        this.noteQuestion = 0;
+
         this.shuffledAnswers = null; // Array für Antworten auf Btns
 
         this.correctQuestions = 0;
@@ -330,12 +339,15 @@ class Presenter {
     async setQuestion() {
         View.setNewQuestionBtnDisabled(true);
         View.setAnswerButtonsDisabled(true);
+        View.setMusicMode(false);
         View.colorAnswerButtons("default", 0);
         View.renderProgressBar(0);
         View.renderStatsText("0/0");
         View.renderStatusText("Bitte warten!")
         this.mathQuestion = 0;
+        this.noteQuestion = 0;
         this.questionNr++;
+        let curtopic = View.getTopic();
        
         View.renderQuestionText("Laden...");
         for (let i = 0; i < 4; i++) {
@@ -344,12 +356,12 @@ class Presenter {
             View.inscribeButtons(i, text, pos); // Tasten beschriften -> View -> Antworten
         }
         // Endbildschrirm deaktivieren
-        View.setEndscreen("disabled");
+        View.setEndscreen(false);
 
         console.log(this.questionNr+1 + "/" + this.m.maxQuestions);
         if (this.questionNr+1 > this.m.maxQuestions){ // alle Fragen beantwortet?
             // Hier eine Übersicht anzeigen (wieviel richtig?)
-            View.setEndscreen("enabled");
+            View.setEndscreen(true);
             // Buttons deaktivieren
             View.setAnswerButtonsDisabled(true);
             View.setNewQuestionBtnDisabled(false);
@@ -369,7 +381,7 @@ class Presenter {
             return
         }
 
-        let curtopic = View.getTopic();
+        
         if (this.m.topic != curtopic){ // neues Thema & Runde -> reset
             console.log("Topic Change! New Round");
             this.m.roundStarted = 0;
@@ -377,7 +389,7 @@ class Presenter {
 
             this.questionNr++;
             // Endbildschrim deaktivieren
-            View.setEndscreen("disabled");  
+            View.setEndscreen(false);  
         }
 
         this.question = await this.m.getQuestion(this.questionNr); // Frage bekommen
@@ -398,8 +410,13 @@ class Presenter {
             this.arrayCreated = 1;
         }
         
+        if (curtopic === "notes" && (this.questionNr <= this.m.maxQuestions)) {
+            console.log("Note question");
+            View.setMusicMode(true);
+            this.noteQuestion = 1;
+        }
         // Regex zur Erkennung, ob Formeln in $ ... $ eingeschlossen
-        if (/.*\$.*\$.*/.test(this.question.q.trim())){
+        else if (/.*\$.*\$.*/.test(this.question.q.trim())){
             console.log("Text contains Math in $ ... $!");
             let renderText = this.question.q.replace(/<br\s*\/?>/gi, "");  // <br> löschen
             View.renderQuestionText(renderText);
@@ -416,9 +433,6 @@ class Presenter {
                 View.renderQuestionText("$" + this.question.q + "$");
             }
             this.mathQuestion = 1;
-        }
-        else{
-            View.renderQuestionText(this.question.q);
         }
 
         View.renderStatsText((this.questionNr +1) + "/" + this.m.maxQuestions);
@@ -441,11 +455,20 @@ class Presenter {
             View.inscribeButtons(i, text, pos); // Tasten beschriften -> View -> Antworten
         }
 
-        // Mathe rendern 
-        if (this.mathQuestion == 1){
+        if (this.noteQuestion == 1){ // Noten rendern
+            console.log("NOTE RENDER");
+            View.renderMusicNotes(this.question.q);
+        }
+        else if (this.mathQuestion == 1){ // Mathe rendern 
+            console.log("MATH RENDER");
             View.renderKatex("question");
             View.renderKatex("answer-btn");
         }
+        else{ // normalen Text rendern
+            console.log("NORMAL RENDER");
+            View.renderQuestionText(this.question.q);
+        }
+
         View.setNewQuestionBtnDisabled(false);
         View.setAnswerButtonsDisabled(false);
     }
@@ -596,6 +619,46 @@ class View {
         }
     }
 
+    static setMusicMode(enabled_bool){
+        if (enabled_bool == true){
+            document.getElementById("question").style.display = "none";
+            document.getElementById("paper").style.display = "block";
+            document.getElementById("paper-box").style.display = "block";   
+        }
+        else if(enabled_bool == false){
+            document.getElementById("paper").style.display = "none";
+            document.getElementById("paper-box").style.display = "none";
+            document.getElementById("question").style.display = "block";
+        }
+    }
+
+    static renderMusicNotes(notes){
+        console.log("RENDERING "+ notes);
+        ABCJS.renderAbc(
+            "paper",
+            notes,
+            {
+                paddingtop: 0,
+                paddingleft: 0,
+                paddingright: 0,
+                paddingbottom: 0,
+            }
+        );
+    
+        // Hacks, damit zentriert angezeigt
+        const svg = document.querySelector("#paper svg");
+        const g = svg.querySelector("g");
+        
+        const bbox = g.getBBox(); // eigentliche Breite/Höhe der Noten (Bounding Box)
+        const scaleFactor = 1.2;
+        svg.style.transform = `scale(${scaleFactor})`;
+        const padding = 15;
+        
+        // nur den Teil mit Noten im ViewPort anzeigen
+        svg.setAttribute("viewBox", `0 0 ${bbox.width} ${bbox.height + padding}`);
+        svg.setAttribute("width", bbox.width);
+    }
+
     static setAnswerButtonsDisabled(disabled_bool){
         for (let i = 0; i < 4; i++){
             document.querySelectorAll("#answer-btn > *")[i].disabled = disabled_bool;
@@ -607,15 +670,15 @@ class View {
     }
 
     // Buttons & EndScreenText verstecken/anzeigen
-    static setEndscreen(action){
-        if (action === "enabled"){
+    static setEndscreen(enabled_bool){
+        if (enabled_bool == true){
             for (let i = 0; i < 4; i++){
                 document.querySelectorAll("#answer-btn > *")[i].style.display = "none";
             }
             document.getElementById("end-screen-text").style.display = "block";
             View.setAnswerButtonsDisabled(true);
         }
-        else if (action == "disabled"){
+        else if (enabled_bool == false){
             for (let i = 0; i < 4; i++){
                 document.querySelectorAll("#answer-btn > *")[i].style.display = "block";
             }
@@ -632,6 +695,9 @@ class View {
         }
         else if (document.getElementById('notes-topic').checked) {
             return "notes";
+        }
+        else if (document.getElementById('WwM?-topic').checked) {
+            return "WwM";
         }
         else if (document.getElementById('generalSrv-topic').checked) {
             return "allgemeinSrv";

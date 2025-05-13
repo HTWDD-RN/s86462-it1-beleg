@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
     <title>Lernprogramm</title>
+
     <link rel="manifest" href="manifest.webmanifest" type="application/manifest+json">
     <link rel="icon" sizes="128x128" href="../images/icon.png"/>
     <meta charset="UTF-8">
@@ -11,8 +12,9 @@
 
     <link rel="stylesheet" href="Lernprogramm.css" type="text/css"/>
 
-    <script src="Lernprogramm.js" type="text/javascript" defer></script>
-
+    <script src="../scripts/abcjs/abcjs-basic-min.js" defer></script>
+    <script src="Lernprogramm.js" defer></script> <!-- Kein type="module"! -->
+    
     <link rel="stylesheet" href="../scripts/katex/katex.min.css">
     <script src="../scripts/katex/katex.min.js" defer></script>
     <script src="../scripts/katex/contrib/auto-render.min.js" defer
@@ -50,6 +52,9 @@
             <label> 
                 <input type="radio" id="notes-topic" name="topic"><img src="../images/notes.png" width="15%">Noten
             </label>
+            <label> 
+                <input type="radio" id="WwM?-topic" name="topic"><img src="../images/WwM.png" width="15%">WwM?
+            </label>
             <label>
                 <input type="radio" id="minecraft-topic" name="topic"><img src="../images/mc.png" width="15%">Minecraft
             </label>
@@ -74,7 +79,12 @@
     </aside>
 
     <main>
-        <div id="question"><p>Frage kommt hier...</p></div>
+        <div id="question">
+            <p>Frage kommt hier...</p>
+        </div>
+        <div id=paper-box>
+            <div id="paper"></div>
+        </div>
         <hr>
 
         <div id="answer-btn" class="flex-container">
@@ -82,7 +92,9 @@
             <button id="B">B</button>
             <button id="C">C</button>
             <button id="D">D</button>
+
             <div id="end-screen-text"></div>
+            
         </div>
         <p id="status-text">➣ Bitte auf Neue Frage drücken, um zu starten!</p>
         
@@ -92,7 +104,7 @@
     
     <div style="height: 5em"></div>
     <footer>
-        Erstellt von Eric Hübel von 08.05. - 12.05.2025 mit HTML, CSS und JS
+        Erstellt von Eric Hübel von 08.05. - 13.05.2025 mit HTML, CSS und JS
     </footer>
 
 </body>

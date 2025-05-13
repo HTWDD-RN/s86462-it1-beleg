@@ -51,8 +51,32 @@
     {"q": "Was passiert beim Schlafen in einem Bett im Nether?", "a": ["Es explodiert", "Der Spawnpunkt wird gesetzt", "Es heilt den Spieler", "Es funktioniert wie im Overworld"]},
     {"q": "Welcher dieser Blöcke fällt, wenn kein Block unter ihm ist?", "a": ["Sand", "Stein", "Erz", "Holz"]}
   ],
+  "WwM": [
+    {"q": "<b>50€</b><br>Was hat man nach Feierabend?", "a": ["Freizeit", "Einigzeit", "Gleichzeit", "Brüderlichzeit"]},
+    {"q": "<b>100€</b><br>Weil er nicht ihr Typ war, konnte er nicht bei ihr ...?", "a": ["landen", "boarden", "abheben", "ausrollen"]},
+    {"q": "<b>200€</b><br>Hab ich das Geld für eine Anschaffung nicht auf der hohen Kante, bleibt die Möglichkeit, dass ich auf ...?", "a": ["Raten kauf", "Teil zahlung", "Kredit geschäft", "Hypo thek"]},
+    {"q": "<b>300€</b><br>Bei Schauspieler Sigl und Komponist Zimmer handelt es sich sozusagen um ...?", "a": ["Hänse", "Hapageien", "Hinguine", "Hellensittiche"]},
+    {"q": "<b>500€</b><br>Welches seltene Phänomen wird in der Medizin als „Struwwelpeter-Syndrom“ beschrieben?", "a": ["unkämmbare Haare", "unputzbare Zähne", "unwaschbare Ohren", "unschneidbare Fingernägel"]},
+    {"q": "<b>1000€</b><br>Was sehen ihre über 4,5 Millionen Instagram-Follower sozusagen, wenn Mode- und Fitness-Influencerin Caro live beim Joggen streamt?", "a": ["Daurlauf", "Spazirgang", "Wandrung", "Abstechr"]},
+    {"q": "<b>2000€</b><br>Die Filme und Sketche welcher 1969 gegründeten Komikertruppe genießen bis heute Kultstatus?", "a": ["Monty Python", "Mickey Kobra", "Marty Natter", "Muddy Anakonda"]},
+    {"q": "<b>4000€</b><br>Welches Verb kennt weder der Zahnarzt noch der Duden?", "a": ["plaquen", "zahnen", "munden", "speicheln"]},
+    {"q": "<b>8000€</b><br>Blau – rot – gelb – blau – grün – rot: in dieser farblichen Abfolge präsentiert sich der offizielle Logo-Schriftzug von ...?", "a": ["Google", "Mattel", "Amazon", "Haribo"]},
+    {"q": "<b>16.000€</b><br>Als sich bei der Wahl 2025 Olaf und Friedrich als Kanzlerkandidaten bewarben, lautete die Frage nach der jeweiligen Kanzlergattin: ...?", "a": ["Britta oder Charlotte?", "Birgit oder Christine?", "Bettina oder Chiara?", "Bärbel oder Christa?"]},
+    {"q": "<b>32.000€</b><br>Im gleichnamigen Evergreen stellten bereits Frank Sinatra, Ella Fitzgerald oder auch Lady Gaga fest: „The lady is a ...“?", "a": ["tramp", "vamp", "champ", "scamp"]},
+    {"q": "<b>64.000€</b><br>Welchen Namen fand Niclas Füllkrug für sich und seinen Kumpel Marvin Ducksch, als sie gemeinsam für Werder Bremen stürmten?", "a": ["die hässlichen Vögel", "die gackernden Hühner", "die diebischen Elstern", "die sterbenden Schwäne"]},
+    {"q": "<b>125.000€</b><br>Aus welchem Grund lebte der spätere Papst Franziskus Mitte der 1980er-Jahren für einige Monate in Deutschland?", "a": ["nie vollendete Doktorarbeit", "erfolglose Asthmatherapie", "wieder gelöste Verlobung", "abgebrochene Winzerlehre"]},
+    {"q": "<b>500.000€</b><br>Ab welcher Haltbarkeitsdauer kann beim Mindesthaltbarkeitsdatum eines Lebensmittels auf die Angabe des Tages verzichtet werden?", "a": ["drei Monate", "vier Wochen", "sechs Monate", "ein Jahr"]},
+    {"q": "<b>1.000.000€</b><br>Was wird mit einem sogenannten Nubiscope gemessen?", "a": ["Wolkenbedeckungsgrad", "Wasserqualität", "Mineralzusammensetzung", "Leuchtkraft von Sternen"]}
+  ],
   "notes": [
-    {"q": "C4", "a": ["C","D","E","H"]},
-    {"q": "(C4 E4 G4)", "a": ["C", "H", "F", "D"]}
+    {"q": "C4 E4 G4", "a": ["C E G", "C D G", "C F G", "E G A"]},
+    {"q": "D4 F4 A4", "a": ["D F A", "D E A", "C E G", "D F G"]},
+    {"q": "E4 G4 B4", "a": ["E G B", "E G A", "D G B", "E F A"]},
+    {"q": "C4 D4", "a": ["C D", "C E", "D E", "D F"]},
+    {"q": "E4 G4", "a": ["E G", "E F", "F G", "G H"]},
+    {"q": "A4 B4", "a": ["A B", "A C", "B C", "A D"]},
+    {"q": "C5", "a": ["C", "D", "E", "H"]},
+    {"q": "D4", "a": ["D", "C", "E", "A"]},
+    {"q": "F4", "a": ["F", "G", "D", "H"]}
     ]
 }

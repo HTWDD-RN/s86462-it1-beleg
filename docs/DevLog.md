@@ -95,9 +95,13 @@
    -> ist leider auch keine Lösung, da dadurch irgendwann die ganze Website im Offline Modus weg ist
    -> ich ignoriere das für jetzt (Idee ist Network first, anstatt Cache first)
 
-  # 13.05.2025
+  # 13.05.2025 (6h)
 
   - Dateipfade relativ gemacht, sodass auf dem Informatik Server alles angezeigt wird
   - manifest.webmanifest auf dem Informatik-Server:
    "scope": "/~s86462/Lernprogramm/",
    "start_url": "https://www.informatik.htw-dresden.de/~s86462/Lernprogramm/",
+  - Noten Thema hinzugefügt
+  - Musikbibliothek abcjs integriert -> muss ABCJS.func schreiben, damit es funktioniert
+  - SVG Eigenschaften bearbeitet, sodass es zentriert dargestellt wird
+  - Wer wird Millionär Thema hinzugefügt -> Fragen in richtiger Reihenfolge!

@@ -117,6 +117,16 @@ aside {
     font-size: medium;
 }
 
+#paper{
+    height: fit-content;
+}
+
+#paper-box {
+    margin: 0 auto; /* Zentriert den Container horizontal */
+    text-align: center; /* Zentriert inline-Inhalte */
+    height: fit-content;
+}
+
 /* Button */
 button {
     display: block;
