@@ -111,6 +111,10 @@ class Model {
                 shuffleArray(data.mathe);
                 this.questions = data.mathe;
             }
+            else if (this.topic === "notes"){
+                shuffleArray(data.notes);
+                this.questions = data.notes;
+            }
             else if (this.topic === "minecraft"){
                 shuffleArray(data.minecraft);
                 this.questions = data.minecraft;
@@ -625,6 +629,9 @@ class View {
         }
         else if (document.getElementById('math-topic').checked) {
             return "mathe";
+        }
+        else if (document.getElementById('notes-topic').checked) {
+            return "notes";
         }
         else if (document.getElementById('generalSrv-topic').checked) {
             return "allgemeinSrv";

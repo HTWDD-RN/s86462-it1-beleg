@@ -51,7 +51,7 @@
     {"q": "Was passiert beim Schlafen in einem Bett im Nether?", "a": ["Es explodiert", "Der Spawnpunkt wird gesetzt", "Es heilt den Spieler", "Es funktioniert wie im Overworld"]},
     {"q": "Welcher dieser Blöcke fällt, wenn kein Block unter ihm ist?", "a": ["Sand", "Stein", "Erz", "Holz"]}
   ],
-  "noten": [
+  "notes": [
     {"q": "C4", "a": ["C","D","E","H"]},
     {"q": "(C4 E4 G4)", "a": ["C", "H", "F", "D"]}
     ]
