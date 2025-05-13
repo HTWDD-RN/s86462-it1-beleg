@@ -101,6 +101,7 @@
   - manifest.webmanifest auf dem Informatik-Server:
    "scope": "/~s86462/Lernprogramm/",
    "start_url": "https://www.informatik.htw-dresden.de/~s86462/Lernprogramm/",
+  - WICHTIG: Wenn es eine DOMException: The operation is insecure., dann ist der Pfad des SW beim Registrieren fehlerhaft oder scope / ist angegeben
   - Noten Thema hinzugefügt
   - Musikbibliothek abcjs integriert -> muss ABCJS.func schreiben, damit es funktioniert
   - SVG Eigenschaften bearbeitet, sodass es zentriert dargestellt wird

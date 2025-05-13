@@ -13,7 +13,7 @@ const filesToCache = [
     "images/general.png",
     "images/math.png",
     "images/notes.png",
-    "images/WwM.png",
+    "images/wwm.png",
     "images/mc.png",
     "images/web.png",
     "images/icon.png",
@@ -55,16 +55,8 @@ self.addEventListener('install', function(event) {
     );
 });
 
-
 self.addEventListener('fetch', event => event.respondWith(
     caches.open(cacheName)
         .then(cache => cache.match(event.request)) // falls im Cache davon laden
         .then(response => response || fetch(event.request))
 ));
-
-/*
-self.addEventListener('fetch', event => event.respondWith(
-    fetch(event.request).then(res => caches.open(cacheName).then(c => { c.put(event.request, res.clone()); return res; }))
-    .catch(() => caches.match(event.request))
-  ));
-*/
