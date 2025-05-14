@@ -67,7 +67,6 @@ class Model {
         
                     if (response.ok) {
                         if ('caches' in window) { // http hat keinen Cache
-                            console.log("SAVING");
                             const cache = await caches.open(this.cacheName);
                             await cache.delete('./questions.json');
                             await cache.put('./questions.json', response.clone());  // Antwort trotzdem im Cache speichern xD
@@ -79,7 +78,7 @@ class Model {
                         // aus Cache laden
                         response = await caches.match('./questions.json');
                         if (!response) {
-                            alert('Keine Internetverbindung und keine Caching-Daten gefunden.');
+                            alert('Keine Verbindung zum Server und keine Caching-Daten gefunden. Stelle sicher, dass du eine Internetverbindung hast und versuche es erneut.');
                             return null;
                         }
                     }
@@ -89,12 +88,12 @@ class Model {
                     // aus Cache laden
                     response = await caches.match('./questions.json');
                     if (!response) {
-                        alert('Keine Verbindung zum Server und keine Caching-Daten gefunden.');
+                        alert('Keine Verbindung zum Server und keine Caching-Daten gefunden. Stelle sicher, dass du eine Internetverbindung hast und versuche es erneut.\n(' + error + ")");
                         return null;
                     }
                 }
                 //alert("Es muss wegen CORS diese Seite auf einem Server gehostet sein, damit JSON Daten geladen werden können!\nError: " + error)
-                console.error('Fehler beim Laden der Daten:', error);
+                console.error('Fehler beim Laden der Daten: ', error);
             }
             const data = await response.json();
             
@@ -180,9 +179,9 @@ class Model {
 
                 } catch (error) {
                     if (error.name === 'AbortError') {
-                        alert("Timeout: Server nicht erreichbar (bist du im HTW-Netz?)");
+                        alert("Timeout: Webquiz-Server nicht erreichbar! Bist du im HTW-Netz?\n("  + error + ")");
                     } else {
-                        alert("Fehler beim Laden: " + error.message);
+                        alert("Fehler beim Laden! Stelle sicher, dass du eine Internetverbindung hast und versuche es erneut.\n(" + error + ")");
                     }
                     return null;
                 }
@@ -233,9 +232,9 @@ class Model {
 
         } catch (error) {
             if (error.name === 'AbortError') {
-                alert("Timeout: Server nicht erreichbar (bist du im HTW-Netz?)");
+                alert("Timeout: Webquiz-Server nicht erreichbar! Bist du im HTW-Netz?\n("  + error + ")");
             } else {
-                alert("Fehler beim Laden: " + error.message);
+                alert("Fehler beim Laden! Stelle sicher, dass du eine Internetverbindung hast und versuche es erneut.\n(" + error + ")");
             }
             return null;
         }

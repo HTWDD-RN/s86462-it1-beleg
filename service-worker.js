@@ -12,6 +12,7 @@ const filesToCache = [
     "src/Lernprogramm.js",
     "src/manifest.webmanifest",
     "src/questions.json",
+    "images/",
     "images/back.jpg",
     "images/backfull.jpg",
     "images/general.png",
@@ -23,6 +24,7 @@ const filesToCache = [
     "images/icon.png",
     "images/icon_pwa_192.png",
     "images/icon_pwa_512.png",
+    "scripts/",
     "scripts/abcjs/abcjs-basic-min.js",
     "scripts/katex/katex.min.js",
     "scripts/katex/katex.min.css",
@@ -108,7 +110,7 @@ const update = request =>
 // from the network with a timeout, if something fails serve from cache)
 self.addEventListener('fetch', evt => {
   evt.respondWith(
-    fromNetwork(evt.request, 10000).catch(() => fromCache(evt.request))
+    fromNetwork(evt.request, 5000).catch(() => fromCache(evt.request))
   );
   evt.waitUntil(update(evt.request));
 });
