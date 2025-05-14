@@ -1,7 +1,5 @@
 "use strict";
 
-
-
 //let p, v, m;
 document.addEventListener('DOMContentLoaded', function () {
     let m = new Model();
@@ -9,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let v = new View(p);
     p.setModelAndView(m, v);
     View.setAnswerButtonsDisabled(true);
+    //console.log("Current cache: " + CURRENT_CACHE)
 });
 
 // Service Worker registrieren für PWA
@@ -37,7 +36,7 @@ class Model {
         this.username = "eric.hue@web.de";
         this.password = "SecretAmazingPW!1!"; // sehr sicher lol
 
-        this.cacheName = "Lernprog-PWA1";
+        this.cacheName = CURRENT_CACHE;
     }
 
     // Holt eine Frage aus dem JSON oder vom Server
