@@ -106,3 +106,7 @@
   - Musikbibliothek abcjs integriert -> muss ABCJS.func schreiben, damit es funktioniert
   - SVG Eigenschaften bearbeitet, sodass es zentriert dargestellt wird
   - Wer wird Millionär Thema hinzugefügt -> Fragen in richtiger Reihenfolge!
+
+  # 14.05.2025 (1h)
+
+  - endlich ein SW mit NetworkFirst Strategie, Fallback ist Cache
