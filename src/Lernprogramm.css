@@ -119,6 +119,7 @@ aside {
 
 #paper{
     height: fit-content;
+    pointer-events: none;
 }
 
 #paper-box {
