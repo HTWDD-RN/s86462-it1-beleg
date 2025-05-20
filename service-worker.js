@@ -109,8 +109,27 @@ const update = request =>
 // general strategy when making a request (eg if online try to fetch it
 // from the network with a timeout, if something fails serve from cache)
 self.addEventListener('fetch', evt => {
+  // custom Timeout for specific things to speed up loading
+  const url = evt.request.url;
+  if (url.startsWith('./questions.json')) {
+    evt.respondWith(
+      fromNetwork(evt.request, 2000).catch(() => fromCache(evt.request))
+    );
+    evt.waitUntil(update(evt.request));
+    return;
+  }
+
+  if (url.startsWith('https://idefix.informatik.htw-dresden.de:8888/api/quizzes/')) {
+    evt.respondWith(
+      fromNetwork(evt.request, 5000).catch(() => fromCache(evt.request))
+    );
+    evt.waitUntil(update(evt.request));
+    return;
+  }
+  
+  // everything else
   evt.respondWith(
-    fromNetwork(evt.request, 5000).catch(() => fromCache(evt.request))
+    fromNetwork(evt.request, 500).catch(() => fromCache(evt.request))
   );
   evt.waitUntil(update(evt.request));
 });

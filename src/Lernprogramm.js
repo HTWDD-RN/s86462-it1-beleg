@@ -44,30 +44,44 @@ class Model {
         // lokale Fragen
         this.topic = View.getTopic();
         if (this.roundStarted != 1 && this.topic != "allgemeinSrv"){ // nur neuladen aus Datei, wenn neue Runde oder neues Thema
+            this.roundStarted = 1;
             let response;
             try {
-                this.roundStarted = 1;
-                
-                const controller = new AbortController();
-                setTimeout(() => controller.abort(), 2000); // 2000ms Timeout, Nutzer sollte hier nicht zu lange auf Cache warten
+                if (navigator.onLine) {
+                    console.log("ONLINE");
 
-                // immer neuste Datei vom Server, kein Cache!!
-                let cacheHeaders = new Headers();
-                cacheHeaders.append('Pragma', 'no-cache');
-                cacheHeaders.append('Cache-control', 'no-cache');
+                    // Timeout auf 2 Sek, damit man nicht ewig auf den Cache wartet
+                    const controller = new AbortController();
+                    setTimeout(() => controller.abort(), 2000);
 
-                response = await fetch("./questions.json", {
-                    method: "GET",
-                    headers: cacheHeaders,
-                    cache: "no-store",
-                    signal: controller.signal
-                });
+                    // Wenn online neuste Datei vom Server, kein Cache!!
+                    let cacheHeaders = new Headers();
+                    cacheHeaders.append('pragma', 'no-cache');
+                    cacheHeaders.append('cache-control', 'no-cache');
+
+                    response = await fetch("./questions.json", {
+                        method: "GET",
+                        headers: cacheHeaders,
+                        cache: "no-store",
+                        signal: controller.signal
+                    });
         
-                if (response.ok) {
+                    if (response.ok) {
+                        if ('caches' in window) { // http hat keinen Cache
+                            const cache = await caches.open(this.cacheName);
+                            await cache.delete('./questions.json');
+                            await cache.put('./questions.json', response.clone());  // Antwort trotzdem im Cache speichern xD
+                        }
+                    }
+                } else {
+                    console.log("OFFLINE");
                     if ('caches' in window) { // http hat keinen Cache
-                        const cache = await caches.open(this.cacheName);
-                        await cache.delete('./questions.json');
-                        await cache.put('./questions.json', response.clone());  // Antwort trotzdem im Cache speichern xD
+                        // aus Cache laden
+                        response = await caches.match('./questions.json');
+                        if (!response) {
+                            alert('Keine Verbindung zum Server und keine Caching-Daten gefunden. Stelle sicher, dass du eine Internetverbindung hast und versuche es erneut.');
+                            return null;
+                        }
                     }
                 }
             } catch (error) {
@@ -130,6 +144,7 @@ class Model {
             this.maxQuestions = quizIdNum;
             this.questions = [];
             //this.questions = new Array(quizIdNum);
+
             for (let quizId = quizIdStart; quizId <= quizIdEnd; quizId++){
                 View.renderQuestionText("Laden... (ID: " + quizId + "/" + quizIdEnd + ")");
                 console.log("Getting ID: " + quizId);
@@ -161,11 +176,7 @@ class Model {
                     }
 
                 } catch (error) {
-                    if (error.name === 'AbortError') {
-                        alert("Timeout: Webquiz-Server nicht erreichbar! Bist du im HTW-Netz?\n("  + error + ")");
-                    } else {
-                        alert("Fehler beim Laden! Stelle sicher, dass du eine Internetverbindung hast und versuche es erneut.\n(" + error + ")");
-                    }
+                    alert("Fehler beim Laden vom Webquiz-Server! Stelle sicher, dass du im HTW-Netz bist, eine Internetverbindung hast und versuche es erneut.\n(" + error + ")");
                     return null;
                 }
             }
