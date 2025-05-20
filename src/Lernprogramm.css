@@ -237,7 +237,9 @@ input[type="radio"] {
 
 /* Neue Frage Button */
 #newquestion-btn {
+    width: 12em;
     margin-left: 0.5em;
+    margin-bottom: 0.5em;
     font-size: medium;
 }
 

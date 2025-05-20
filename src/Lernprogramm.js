@@ -51,36 +51,23 @@ class Model {
                 const controller = new AbortController();
                 setTimeout(() => controller.abort(), 2000); // 2000ms Timeout, Nutzer sollte hier nicht zu lange auf Cache warten
 
-                if (navigator.onLine) {
-                    console.log("ONLINE");
-                    // Wenn online neuste Datei vom Server, kein Cache!!
-                    let cacheHeaders = new Headers();
-                    cacheHeaders.append('pragma', 'no-cache');
-                    cacheHeaders.append('cache-control', 'no-cache');
+                // immer neuste Datei vom Server, kein Cache!!
+                let cacheHeaders = new Headers();
+                cacheHeaders.append('pragma', 'no-cache');
+                cacheHeaders.append('cache-control', 'no-cache');
 
-                    response = await fetch("./questions.json", {
-                        method: "GET",
-                        headers: cacheHeaders,
-                        cache: "no-store",
-                        signal: controller.signal
-                    });
+                response = await fetch("./questions.json", {
+                    method: "GET",
+                    headers: cacheHeaders,
+                    cache: "no-store",
+                    signal: controller.signal
+                });
         
-                    if (response.ok) {
-                        if ('caches' in window) { // http hat keinen Cache
-                            const cache = await caches.open(this.cacheName);
-                            await cache.delete('./questions.json');
-                            await cache.put('./questions.json', response.clone());  // Antwort trotzdem im Cache speichern xD
-                        }
-                    }
-                } else {
-                    console.log("OFFLINE");
+                if (response.ok) {
                     if ('caches' in window) { // http hat keinen Cache
-                        // aus Cache laden
-                        response = await caches.match('./questions.json');
-                        if (!response) {
-                            alert('Keine Verbindung zum Server und keine Caching-Daten gefunden. Stelle sicher, dass du eine Internetverbindung hast und versuche es erneut.');
-                            return null;
-                        }
+                        const cache = await caches.open(this.cacheName);
+                        await cache.delete('./questions.json');
+                        await cache.put('./questions.json', response.clone());  // Antwort trotzdem im Cache speichern xD
                     }
                 }
             } catch (error) {
@@ -133,12 +120,9 @@ class Model {
             // curl --user eric.hue@web.de:SecretAmazingPW\!\1\! -X GET https://idefix.informatik.htw-dresden.de:8888/api/quizzes/1959
             this.roundStarted = 1;
 
-            //const quizIdStart = 149;
-            //const quizIdEnd = 248;
-            // 1950-1961
-            const quizIdStart = 149;
-            const quizIdEnd = 248;
-            const quizIdNum = (quizIdEnd - quizIdStart) +1;
+            const quizIdStart = 1997;
+            const quizIdEnd = 2007;
+            const quizIdNum = (quizIdEnd - quizIdStart) + 1;
 
             const headers = new Headers();
             headers.set('Authorization', 'Basic ' + btoa(this.username + ':' + this.password));
@@ -565,6 +549,9 @@ class Presenter {
             }
         }
         console.log("Question Array: " + this.questionLog);
+        let percent = Math.round((this.questionNr + 1) / this.m.maxQuestions * 100); 
+        //console.log(percent);
+        View.renderProgressBar(percent);
         View.setNewQuestionBtnDisabled(false);
     }
 }
