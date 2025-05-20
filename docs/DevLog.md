@@ -110,3 +110,11 @@
   # 14.05.2025 (1h)
 
   - endlich ein SW mit NetworkFirst Strategie, Fallback ist Cache
+
+  # 20.05.2025
+
+  - KaTeX Rendering für Statistiken hinzugefügt und richtige Antwort (mit display: false kann es in der selben Zeile angezeigt werden)
+  - Fortschrittsleiste ist bei ersten Frage bei 0%
+  - Todo: 
+    - Musik-Noten Playback?
+    - eigene Fragen hochladen auf Webquiz-Server (10 Stück)

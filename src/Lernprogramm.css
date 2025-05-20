@@ -261,6 +261,7 @@ hr {
     line-height: 1 !important;
     pointer-events: none; /* damit beim Klick auf Katex Buttontext immer was passiert */
 }
+
 span{
     margin: 0;
     padding: 0em;

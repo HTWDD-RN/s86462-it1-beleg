@@ -98,7 +98,6 @@ class Model {
             const data = await response.json();
             
             // nach Typ die richtigen Fragen auswählen
-            this.topic = View.getTopic();
             console.log("Topic: " + this.topic);
             if (this.topic === "allgemein"){
                 shuffleArray(data.allgemein);
@@ -309,8 +308,7 @@ class Presenter {
             // kein <br> in Fragen
             //question = this.m.questions[i].q.replace(/<br\s*\/?>/gi, " ");
             question = this.m.questions[i].q.replaceAll("<br>", " ");
-            // kein $ für Mathe in Fragen
-            question = question.replaceAll("$", "");
+            
             summaryString = summaryString + answerStatus + " " + (i+1) + ". " + question + ": " + answerString + correctionString  + "<br>";
         }
         return summaryString;
@@ -375,6 +373,7 @@ class Presenter {
 
             let summaryString = this.createQuestionSummaryStr();
             View.renderEndScreenText(summaryString);
+            View.renderKatex("end-screen-text", false);
             View.renderStatusText( "✅ richtig | ❌ falsch | 🚫 unbeantwortet");
             //console.log("SummaryStr: " + summaryString);
 
@@ -394,7 +393,6 @@ class Presenter {
             this.reset();
             return
         }
-
         
         if (this.m.topic != curtopic){ // neues Thema & Runde -> reset
             console.log("Topic Change! New Round");
@@ -449,8 +447,8 @@ class Presenter {
             this.mathQuestion = 1;
         }
 
-        View.renderStatsText((this.questionNr +1) + "/" + this.m.maxQuestions);
-        let percent = Math.round((this.questionNr+1) / this.m.maxQuestions * 100); 
+        View.renderStatsText((this.questionNr + 1) + "/" + this.m.maxQuestions);
+        let percent = Math.round((this.questionNr) / this.m.maxQuestions * 100); 
         //console.log(percent);
         View.renderProgressBar(percent);
         View.renderStatusText("Bitte eine Antwort auswählen!")
@@ -463,7 +461,7 @@ class Presenter {
         for (let i = 0; i < 4; i++) {
             let text = this.shuffledAnswers[i];
             if (this.mathQuestion == 1){
-                text = "$" + this.shuffledAnswers[i] + "$";
+                text = this.shuffledAnswers[i];
             }
             let pos = i;
             View.inscribeButtons(i, text, pos); // Tasten beschriften -> View -> Antworten
@@ -475,8 +473,8 @@ class Presenter {
         }
         else if (this.mathQuestion == 1){ // Mathe rendern 
             console.log("MATH RENDER");
-            View.renderKatex("question");
-            View.renderKatex("answer-btn");
+            View.renderKatex("question", true);
+            View.renderKatex("answer-btn", true);
         }
         else{ // normalen Text rendern
             console.log("NORMAL RENDER");
@@ -509,7 +507,7 @@ class Presenter {
                 this.questionLog[this.questionNr] = [1, buttonText];
 
                 // letzte Frage korrekt -> Millionär
-                if (View.getTopic() === "WwM" && this.correctQuestions == this.m.maxQuestions){
+                if (this.m.topic === "WwM" && this.correctQuestions == this.m.maxQuestions){
                     this.noMillionaere = 0;
                 }
             } 
@@ -521,9 +519,13 @@ class Presenter {
                 this.questionLog[this.questionNr] = [-1, buttonText];
 
                 // doch kein Millionär :( -> nicht weiterspielen 
-                if (View.getTopic() === "WwM"){
+                if (this.m.topic === "WwM"){
                     this.questionNr = this.m.maxQuestions+1;
                     this.noMillionaere = 1;
+                }
+
+                if (this.m.topic === "mathe"){
+                    View.renderKatex("status-text", false);
                 }
             }
         }
@@ -574,7 +576,7 @@ class View {
         this.setHandler();
     }
 
-    static renderKatex(elemName){
+    static renderKatex(elemName, MultiLine_bool){
         let elem = null;
         
         if (elemName === "answer-btn"){ // alle Buttons durchgehen
@@ -583,7 +585,7 @@ class View {
                 console.log("Rendering in: " + elem);
                 renderMathInElement(elem, {
                     delimiters: [
-                        {left: "$", right: "$", display: true},
+                        {left: "$", right: "$", display: MultiLine_bool},
                         {left: "$$", right: "$$", display: true},
                         {left: "\\(", right: "\\)", display: true},
                         {left: "\\[", right: "\\]", display: true}
@@ -596,7 +598,7 @@ class View {
             elem = document.getElementById(elemName);
             renderMathInElement(elem, {
                 delimiters: [
-                    {left: "$", right: "$", display: true},
+                    {left: "$", right: "$", display: MultiLine_bool},
                     {left: "$$", right: "$$", display: true},
                     {left: "\\(", right: "\\)", display: true},
                     {left: "\\[", right: "\\]", display: true}
