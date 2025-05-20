@@ -601,6 +601,7 @@ class View {
         // this soll auf Objekt zeigen -> bind (this)
         document.getElementById("answer-btn").addEventListener("click", this.checkEvent.bind(this), false); // checkEvent() für 4 Answer Buttons
         document.getElementById("newquestion-btn").addEventListener("click", this.newQuestion.bind(this), false); // newQuestion() für NewQuestion Button
+        document.getElementById("topic").addEventListener("change", this.newQuestion.bind(this), false);
     }
 
     newQuestion() {
