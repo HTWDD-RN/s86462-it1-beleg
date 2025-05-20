@@ -356,6 +356,16 @@ class Presenter {
         // Endbildschrirm deaktivieren
         View.setEndscreen(false);
 
+        if (this.m.topic != curtopic){ // neues Thema & Runde -> reset
+            console.log("Topic Change! New Round");
+            this.m.roundStarted = 0;
+            this.reset();
+
+            this.questionNr++;
+            // Endbildschrim deaktivieren
+            View.setEndscreen(false);  
+        }
+
         console.log(this.questionNr+1 + "/" + this.m.maxQuestions);
         if (this.questionNr+1 > this.m.maxQuestions){ // alle Fragen beantwortet?
             // Hier eine Übersicht anzeigen (wieviel richtig?)
@@ -387,16 +397,6 @@ class Presenter {
             this.m.roundStarted = 0; // neue Runde -> reset
             this.reset();
             return
-        }
-        
-        if (this.m.topic != curtopic){ // neues Thema & Runde -> reset
-            console.log("Topic Change! New Round");
-            this.m.roundStarted = 0;
-            this.reset();
-
-            this.questionNr++;
-            // Endbildschrim deaktivieren
-            View.setEndscreen(false);  
         }
 
         this.question = await this.m.getQuestion(this.questionNr); // Frage bekommen
