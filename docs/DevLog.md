@@ -111,12 +111,13 @@
 
   - endlich ein SW mit NetworkFirst Strategie, Fallback ist Cache
 
-  # 20.05.2025 (4h)
+  # 20.05.2025 (5h)
 
   - KaTeX Rendering für Statistiken hinzugefügt und richtige Antwort (mit display: false kann es in der selben Zeile angezeigt werden)
   - Fortschrittsleiste ist bei ersten Frage bei 0% und geht erst nach Lösen der Frage hoch
   - eigene Fragen hochgeladen -> vorher gelöste Fragen zu löschen schlägt fehl, da Fragen-Datenbankeinträge noch in Relation mit completion sind:
     - "could not execute statement; SQL [n/a]; constraint [\"FKKFVSRR06095Q83TPUU1X51H3: PUBLIC.COMPLETION FOREIGN KEY(QUIZ_ID) REFERENCES PUBLIC.QUIZ(ID) (1975)\"
+  - noch zusätzliche Cache Fixes, sodass Fragen vom WebQuizServer nie gecacht werden (entvalidierung durch Date.now()) 
   - Todo: 
     - Musik-Noten Playback?
     - eigene Fragen hochladen auf Webquiz-Server (10 Stück) OK

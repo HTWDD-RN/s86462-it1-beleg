@@ -53,8 +53,8 @@ class Model {
 
                 // immer neuste Datei vom Server, kein Cache!!
                 let cacheHeaders = new Headers();
-                cacheHeaders.append('pragma', 'no-cache');
-                cacheHeaders.append('cache-control', 'no-cache');
+                cacheHeaders.append('Pragma', 'no-cache');
+                cacheHeaders.append('Cache-control', 'no-cache');
 
                 response = await fetch("./questions.json", {
                     method: "GET",
@@ -130,7 +130,6 @@ class Model {
             this.maxQuestions = quizIdNum;
             this.questions = [];
             //this.questions = new Array(quizIdNum);
-            console.log("HELLO");
             for (let quizId = quizIdStart; quizId <= quizIdEnd; quizId++){
                 View.renderQuestionText("Laden... (ID: " + quizId + "/" + quizIdEnd + ")");
                 console.log("Getting ID: " + quizId);
@@ -139,8 +138,9 @@ class Model {
                 const controller = new AbortController();
                 setTimeout(() => controller.abort(), 5000);
                 try {
-                    const response = await fetch(`https://idefix.informatik.htw-dresden.de:8888/api/quizzes/${quizId}`, {
+                    const response = await fetch(`https://idefix.informatik.htw-dresden.de:8888/api/quizzes/${quizId}?date=${Date.now()}`, {
                         method: 'GET',
+                        cache: "no-store",
                         headers: headers,
                         signal: controller.signal
                     });
@@ -504,7 +504,7 @@ class Presenter {
 
                 // doch kein Millionär :( -> nicht weiterspielen 
                 if (this.m.topic === "WwM"){
-                    this.questionNr = this.m.maxQuestions+1;
+                    this.questionNr = this.m.maxQuestions-1;
                     this.noMillionaere = 1;
                 }
 
