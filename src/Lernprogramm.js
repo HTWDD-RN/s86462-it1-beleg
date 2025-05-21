@@ -337,6 +337,7 @@ class Presenter {
     async setQuestion() {
         View.setNewQuestionBtnDisabled(true);
         View.setAnswerButtonsDisabled(true);
+        View.setTopicRadioBtnsDisabled(true);
         View.setMusicMode(false);
         View.colorAnswerButtons("default", 0);
         View.renderProgressBar(0);
@@ -478,6 +479,7 @@ class Presenter {
 
         View.setNewQuestionBtnDisabled(false);
         View.setAnswerButtonsDisabled(false);
+        View.setTopicRadioBtnsDisabled(false);
     }
 
     // Prüft die Antwort, aktualisiert Statistik und setzt die View
@@ -693,6 +695,20 @@ class View {
 
     static setNewQuestionBtnDisabled(disabled_bool){
         document.getElementById("newquestion-btn").disabled = disabled_bool;
+    }
+
+    static setTopicRadioBtnsDisabled(disabled_bool){
+        let radiobtns = document.getElementsByClassName("radio");
+        for (let i = 0; i < radiobtns.length; i++){
+            radiobtns[i].disabled = disabled_bool;
+        }
+
+        if (disabled_bool == true){
+            document.getElementById("topic").classList.add("disabled");
+        }
+        else {
+            document.getElementById("topic").classList.remove("disabled");
+        }
     }
 
     // Buttons & EndScreenText verstecken/anzeigen
