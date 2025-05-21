@@ -403,6 +403,7 @@ class Presenter {
         this.question = await this.m.getQuestion(this.questionNr); // Frage bekommen
         if (this.question == null){ // Server Timeout? -> Abbruch
             View.setNewQuestionBtnDisabled(false);
+            View.setTopicRadioBtnsDisabled(false);
             View.renderStatusText("Server Timeout!")
             this.m.roundStarted = 0; // neue Runde -> reset
             this.reset();
@@ -587,7 +588,7 @@ class View {
                     delimiters: [
                         {left: "$", right: "$", display: MultiLine_bool},
                         {left: "$$", right: "$$", display: true},
-                        {left: "\\(", right: "\\)", display: true},
+                        {left: "\\(", right: "\\)", display: false},
                         {left: "\\[", right: "\\]", display: true}
                     ],
                     throwOnError: false
@@ -600,7 +601,7 @@ class View {
                 delimiters: [
                     {left: "$", right: "$", display: MultiLine_bool},
                     {left: "$$", right: "$$", display: true},
-                    {left: "\\(", right: "\\)", display: true},
+                    {left: "\\(", right: "\\)", display: false},
                     {left: "\\[", right: "\\]", display: true}
                 ],
                 throwOnError: false

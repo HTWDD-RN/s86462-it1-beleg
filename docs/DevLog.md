@@ -95,36 +95,41 @@
    -> ist leider auch keine Lösung, da dadurch irgendwann die ganze Website im Offline Modus weg ist
    -> ich ignoriere das für jetzt (Idee ist Network first, anstatt Cache first)
 
-  # 13.05.2025 (6h)
+## 13.05.2025 (6h)
 
-  - Dateipfade relativ gemacht, sodass auf dem Informatik Server alles angezeigt wird
-  - manifest.webmanifest auf dem Informatik-Server:
-   "scope": "/~s86462/Lernprogramm/",
-   "start_url": "https://www.informatik.htw-dresden.de/~s86462/Lernprogramm/",
-  - WICHTIG: Wenn es eine DOMException: The operation is insecure., dann ist der Pfad des SW beim Registrieren fehlerhaft oder scope / ist angegeben
-  - Noten Thema hinzugefügt
-  - Musikbibliothek abcjs integriert -> muss ABCJS.func schreiben, damit es funktioniert
-  - SVG Eigenschaften bearbeitet, sodass es zentriert dargestellt wird
-  - Wer wird Millionär Thema hinzugefügt -> Fragen in richtiger Reihenfolge!
+- Dateipfade relativ gemacht, sodass auf dem Informatik Server alles angezeigt wird
+- manifest.webmanifest auf dem Informatik-Server:
+  "scope": "/~s86462/Lernprogramm/",
+  "start_url": "https://www.informatik.htw-dresden.de/~s86462/Lernprogramm/",
+- WICHTIG: Wenn es eine DOMException: The operation is insecure., dann ist der Pfad des SW beim Registrieren fehlerhaft oder scope / ist angegeben
+- Noten Thema hinzugefügt
+- Musikbibliothek abcjs integriert -> muss ABCJS.func schreiben, damit es funktioniert
+- SVG Eigenschaften bearbeitet, sodass es zentriert dargestellt wird
+- Wer wird Millionär Thema hinzugefügt -> Fragen in richtiger Reihenfolge!
 
-  # 14.05.2025 (1h)
+## 14.05.2025 (1h)
 
-  - endlich ein SW mit NetworkFirst Strategie, Fallback ist Cache
+- endlich ein SW mit NetworkFirst Strategie, Fallback ist Cache
 
-  # 20.05.2025 (7h)
+## 20.05.2025 (7h)
 
-  - KaTeX Rendering für Statistiken hinzugefügt und richtige Antwort (mit display: false kann es in der selben Zeile angezeigt werden)
-  - Fortschrittsleiste ist bei ersten Frage bei 0% und geht erst nach Lösen der Frage hoch
-  - eigene Fragen hochgeladen -> vorher gelöste Fragen zu löschen schlägt fehl, da Fragen-Datenbankeinträge noch in Relation mit completion sind:
-    - "could not execute statement; SQL [n/a]; constraint [\"FKKFVSRR06095Q83TPUU1X51H3: PUBLIC.COMPLETION FOREIGN KEY(QUIZ_ID) REFERENCES PUBLIC.QUIZ(ID) (1975)\"
-  - noch zusätzliche Cache Fixes, sodass Fragen vom WebQuizServer nie gecacht werden (entvalidierung durch Date.now())
-  - SW-Fixes, sodass die Seite schneller lädt, indem der Timeout nur für bestimmte Dateien höher gesetzt wird (ich hasse das langsam)
-  - außerdem scheinen Chrome und Firefox etwas anders zu funktionieren wenn offline:
-    - Firefox gibt sofort NetworkError
-    - Chrome wartet bis Timeout -> AbortError
-  -> kann deshalb nur eine generische Errormeldung geben
-  - Todo: 
-    - Musik-Noten Playback?
-    - eigene Fragen hochladen auf Webquiz-Server (10 Stück) OK
-    - TopicChange, wenn neues Thema angeklickt (setQuestion aufrufen)? -> neuer EventListener für RadioButtons OK
-    -> diese noch deaktivieren, wenn geladen wird!!! OK
+- KaTeX Rendering für Statistiken hinzugefügt und richtige Antwort (mit display: false kann es in der selben Zeile angezeigt werden)
+- Fortschrittsleiste ist bei ersten Frage bei 0% und geht erst nach Lösen der Frage hoch
+- eigene Fragen hochgeladen -> vorher gelöste Fragen zu löschen schlägt fehl, da Fragen-Datenbankeinträge noch in Relation mit completion sind:
+  - "could not execute statement; SQL [n/a]; constraint [\"FKKFVSRR06095Q83TPUU1X51H3: PUBLIC.COMPLETION FOREIGN KEY(QUIZ_ID) REFERENCES PUBLIC.QUIZ(ID) (1975)\"
+- noch zusätzliche Cache Fixes, sodass Fragen vom WebQuizServer nie gecacht werden (entvalidierung durch Date.now())
+- SW-Fixes, sodass die Seite schneller lädt, indem der Timeout nur für bestimmte Dateien höher gesetzt wird (ich hasse das langsam)
+- außerdem scheinen Chrome und Firefox etwas anders zu funktionieren wenn offline:
+  - Firefox gibt sofort NetworkError
+  - Chrome wartet bis Timeout -> AbortError
+-> kann deshalb nur eine generische Errormeldung geben
+- Todo: 
+  - Musik-Noten Playback?
+  - eigene Fragen hochladen auf Webquiz-Server (10 Stück) OK
+  - TopicChange, wenn neues Thema angeklickt (setQuestion aufrufen)? -> neuer EventListener für RadioButtons OK
+  -> diese noch deaktivieren, wenn geladen wird!!! OK
+
+## 21.05.2025 (2h)
+
+- Radiobuttons deaktivieren nun, wenn neues Thema geladen wird
+- Todo: Musik-Noten Keyboard Eingabe, vielleicht Playback?
