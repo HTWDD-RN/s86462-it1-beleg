@@ -89,17 +89,38 @@
         <hr>
 
         <div id="answer-btn" class="flex-container">
-            <button id="A">A</button>
-            <button id="B">B</button>
-            <button id="C">C</button>
-            <button id="D">D</button>
+            <button id="A-Btn">A</button>
+            <button id="B-Btn">B</button>
+            <button id="C-Btn">C</button>
+            <button id="D-Btn">D</button>
 
             <div id="end-screen-text"></div>
+
+            <div class="piano" id="piano-div">
+                <div data-note="C" class="key white"><span>C</span></div>
+                <div data-note="Db" class="key black"><span>Db</span></div>
+                <div data-note="D" class="key white"><span>D</span></div>
+                <div data-note="Eb" class="key black"><span>Eb</span></div>
+                <div data-note="E" class="key white"><span>E</span></div>
+                <div data-note="F" class="key white"><span>F</span></div>
+                <div data-note="Gb" class="key black"><span>Gb</span></div>
+                <div data-note="G" class="key white"><span>G</span></div>
+                <div data-note="Ab" class="key black"><span>Ab</span></div>
+                <div data-note="A" class="key white"><span>A</span></div>
+                <div data-note="Bb" class="key black"><span>Bb</span></div>
+                <div data-note="B" class="key white"><span>B</span></div>
+            </div>
+
+            
             
         </div>
         <p id="status-text">➣ Bitte auf Neue Frage drücken, um zu starten!</p>
         
-        <button id="newquestion-btn">Neue Frage</button>
+        <div id="action-btn">
+            <button id="newquestion-btn">Neue Frage</button>
+            <button id="piano-check-btn">Antwort prüfen</button>
+            <button id="piano-reset-btn">Zurücksetzen</button>
+        </div>
     </main>
 
     
@@ -107,6 +128,19 @@
     <footer>
         Erstellt von Eric Hübel von 08.05. - 21.05.2025 mit HTML, CSS und JS
     </footer>
+
+    <audio id="C" src="../notes/C.mp3"></audio>
+    <audio id="Db" src="../notes/Db.mp3"></audio>
+    <audio id="D" src="../notes/D.mp3"></audio>
+    <audio id="Eb" src="../notes/Eb.mp3"></audio>
+    <audio id="E" src="../notes/E.mp3"></audio>
+    <audio id="F" src="../notes/F.mp3"></audio>
+    <audio id="Gb" src="../notes/Gb.mp3"></audio>
+    <audio id="G" src="../notes/G.mp3"></audio>
+    <audio id="Ab" src="../notes/Ab.mp3"></audio>
+    <audio id="A" src="../notes/A.mp3"></audio>
+    <audio id="Bb" src="../notes/Bb.mp3"></audio>
+    <audio id="B" src="../notes/B.mp3"></audio>
 
 </body>
 </html>

@@ -133,3 +133,10 @@
 
 - Radiobuttons deaktivieren nun, wenn neues Thema geladen wird
 - Todo: Musik-Noten Keyboard Eingabe, vielleicht Playback?
+
+## 23.05.2025 (4h)
+
+- Piano-Keyboard integriert ins Lernprogramm (Basis: https://github.com/pncsoares/piano)
+- gedrückte Noten werden in einem String gesammelt und auf Wunsch des Nutzers mit der Antwort verglichen
+  -> diese müssen beide vom selben Datentyp sein, sonst schlägt der Stringvergleich (===) fehl auch wenn der Inhalt exakt derselbe ist?!, gelöst mit String()
+- Samples wurden selbst neu aufgenommen mithilfe einer Midi-Datei und einer gut klingenden Soundfont

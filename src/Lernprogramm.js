@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let p = new Presenter();
     let v = new View(p);
     p.setModelAndView(m, v);
+    v.setupPiano();
+    View.setMusicMode(false);
     View.setAnswerButtonsDisabled(true);
     //console.log("Current cache: " + CURRENT_CACHE)
 });
@@ -339,6 +341,8 @@ class Presenter {
         View.setAnswerButtonsDisabled(true);
         View.setTopicRadioBtnsDisabled(true);
         View.setMusicMode(false);
+        this.v.resetPiano();
+        View.setPianoBtnsDisabled(false);
         View.colorAnswerButtons("default", 0);
         View.renderProgressBar(0);
         View.renderStatsText("0/0");
@@ -404,6 +408,7 @@ class Presenter {
         if (this.question == null){ // Server Timeout? -> Abbruch
             View.setNewQuestionBtnDisabled(false);
             View.setTopicRadioBtnsDisabled(false);
+            View.setPianoBtnsDisabled(false);
             View.renderStatusText("Server Timeout!")
             this.m.roundStarted = 0; // neue Runde -> reset
             this.reset();
@@ -467,6 +472,7 @@ class Presenter {
         if (this.noteQuestion == 1){ // Noten rendern
             console.log("NOTE RENDER");
             View.renderMusicNotes(this.question.q);
+            View.renderStatusText("Bitte die gezeigten Noten korrekt spielen!")
         }
         else if (this.mathQuestion == 1){ // Mathe rendern 
             console.log("MATH RENDER");
@@ -568,6 +574,36 @@ class Presenter {
         View.renderProgressBar(percent);
         View.setNewQuestionBtnDisabled(false);
     }
+
+    async checkAnswerPiano(answer) {
+        View.renderStatusText("Überprüfe Antwort...")
+        View.setNewQuestionBtnDisabled(true);
+        View.setPianoBtnsDisabled(true);
+        this.v.resetPiano();
+        console.log("Answer Len" + answer.length);
+        console.log("Questions Answ Len" + this.question.a[0].length);
+
+        console.log("Antwort Chars: ", [...answer].map(c => c.charCodeAt(0)));
+        console.log("Richtige Chars: ", [...this.question.a[0]].map(c => c.charCodeAt(0)));
+
+        if (String(answer) === String(this.question.a[0])) { // richtige Antwort
+            console.log("Richtige Antwort!");
+            View.renderStatusText("✅ " + answer + " ist die richtige Antwort!");
+            this.correctQuestions++;
+            this.questionLog[this.questionNr] = [1, answer];
+        }
+        else { // falsch
+            console.log("Falsche Antwort! Richtig ist: " + this.question.a[0]);
+            View.renderStatusText("❌ " + answer + " ist die falsche Antwort! Richtig ist: " + this.question.a[0]);
+
+            this.questionLog[this.questionNr] = [-1, answer];
+        }
+        console.log("Question Array: " + this.questionLog);
+        let percent = Math.round((this.questionNr + 1) / this.m.maxQuestions * 100); 
+        View.renderProgressBar(percent);
+        View.setNewQuestionBtnDisabled(false);
+    }
+
 }
 
 // ##################### View: Bildschirmausgabe, Eventhandling ########################################
@@ -575,6 +611,8 @@ class View {
     constructor(p) {
         this.p = p;  // Presenter
         this.setHandler();
+        
+        this.noteString = "";
     }
 
     static renderKatex(elemName, MultiLine_bool){
@@ -615,7 +653,9 @@ class View {
         // this soll auf Objekt zeigen -> bind (this)
         document.getElementById("answer-btn").addEventListener("click", this.checkEvent.bind(this), false); // checkEvent() für 4 Answer Buttons
         document.getElementById("newquestion-btn").addEventListener("click", this.newQuestion.bind(this), false); // newQuestion() für NewQuestion Button
-        document.getElementById("topic").addEventListener("change", this.newQuestion.bind(this), false);
+        document.getElementById("topic").addEventListener("change", this.newQuestion.bind(this), false); // newQuestion() bei Topic Radio Buttons
+        document.getElementById("piano-reset-btn").addEventListener("click", this.resetPiano.bind(this), false);
+        document.getElementById("piano-check-btn").addEventListener("click", this.checkAnswerPiano.bind(this), false);
     }
 
     newQuestion() {
@@ -652,11 +692,22 @@ class View {
         if (enabled_bool == true){
             document.getElementById("question").style.display = "none";
             document.getElementById("paper").style.display = "block";
-            document.getElementById("paper-box").style.display = "block";   
+            document.getElementById("paper-box").style.display = "block"; 
+
+            document.getElementById("piano-div").style.display = "flex";
+            document.querySelector('.flex-container').style.flexDirection = "row"; // flexDirection wird solange Piano exisitiert geändert
+            this.setAnswerButtonsHidden(true);
+            this.setPianoBtnsHidden(false);
         }
         else if(enabled_bool == false){
+            this.setPianoBtnsHidden(true);
+            this.setAnswerButtonsHidden(false);
             document.getElementById("paper").style.display = "none";
             document.getElementById("paper-box").style.display = "none";
+
+            document.getElementById("piano-div").style.display = "none";
+            document.querySelector('.flex-container').style.flexDirection = ''; // jetzt wieder CSS überlassen
+
             document.getElementById("question").style.display = "block";
         }
     }
@@ -694,8 +745,37 @@ class View {
         }
     }
 
+    static setAnswerButtonsHidden(disabled_bool){
+        if (disabled_bool == true){
+            for (let i = 0; i < 4; i++){
+                document.querySelectorAll("#answer-btn > *")[i].style.display = "none";
+            }
+        }
+        else {
+            for (let i = 0; i < 4; i++){
+                document.querySelectorAll("#answer-btn > *")[i].style.display = "block";
+            }
+        }
+    }
+
     static setNewQuestionBtnDisabled(disabled_bool){
         document.getElementById("newquestion-btn").disabled = disabled_bool;
+    }
+
+    static setPianoBtnsDisabled(disabled_bool){
+        document.getElementById("piano-check-btn").disabled = disabled_bool;
+        document.getElementById("piano-reset-btn").disabled = disabled_bool;
+    }
+
+    static setPianoBtnsHidden(disabled_bool){
+        if (disabled_bool == true){
+            document.getElementById("piano-check-btn").style.display = "none";
+            document.getElementById("piano-reset-btn").style.display = "none";
+        }
+        else {
+            document.getElementById("piano-check-btn").style.display = "flex";
+            document.getElementById("piano-reset-btn").style.display = "flex";
+        }
     }
 
     static setTopicRadioBtnsDisabled(disabled_bool){
@@ -787,5 +867,76 @@ class View {
     static renderStatusText(text){
         let div = document.getElementById("status-text");
         div.textContent = "➣ " + text;
+    }
+
+    setupPiano(){
+        const white_keys = ['y', 'x', 'c', 'v', 'b', 'n', 'm'];
+        const black_keys = ['s', 'd', 'g', 'h', 'j'];
+
+        const keys = document.querySelectorAll('.key');
+        const whiteKeys = document.querySelectorAll('.key.white');
+        const blackKeys = document.querySelectorAll('.key.black');
+
+        this.NoteString = "";
+
+        keys.forEach(key => {
+            key.addEventListener('click', () => this.playNote(key));
+        });
+
+        document.addEventListener('keydown', e => {
+            if (e.repeat) {
+                return;
+            }
+
+            const key = e.key;
+            const whiteKeyIndex = white_keys.indexOf(key);
+            const blackKeyIndex = black_keys.indexOf(key);
+
+            if (whiteKeyIndex > -1) {
+                this.playNote(whiteKeys[whiteKeyIndex]);
+            }
+
+            if (blackKeyIndex > -1) {
+                this.playNote(blackKeys[blackKeyIndex]);
+            }
+        });
+    }
+
+    playNote(key) {
+        if (this.NoteString.length > 100){
+            this.NoteString = "";
+        }
+
+        if (this.NoteString === ""){ // kein Leerzeichen davor bei erster Note
+            this.NoteString = this.NoteString + key.dataset.note;
+        }
+        else{
+            this.NoteString = this.NoteString + " " + key.dataset.note;
+        }
+
+        View.renderStatusText("Gespielt: " + this.NoteString);
+        
+        const noteAudio = document.getElementById(key.dataset.note);
+        if (!noteAudio) {
+            console.log("Audio-Element nicht gefunden für:", key.dataset.note);
+            return;
+        }
+
+        noteAudio.currentTime = 0;
+        noteAudio.play();
+    
+        key.classList.add('active');
+        noteAudio.addEventListener('ended', () => {
+            key.classList.remove('active');
+        })
+    }
+
+    resetPiano(){
+        this.NoteString = "";
+        View.renderStatusText("Gespielt: " + this.NoteString);
+    }
+
+    checkAnswerPiano(){
+        this.p.checkAnswerPiano(this.NoteString);
     }
 }
