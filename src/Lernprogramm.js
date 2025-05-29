@@ -6,9 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let p = new Presenter();
     let v = new View(p);
     p.setModelAndView(m, v);
-    v.setupPiano();
-    View.setMusicMode(false);
-    View.setAnswerButtonsDisabled(true);
     //console.log("Current cache: " + CURRENT_CACHE)
 });
 
@@ -19,7 +16,10 @@ if ('serviceWorker' in navigator) {
         .catch(err => console.log(err))
 }
 
-// Fisher–Yates shuffle
+/**
+ * Fisher–Yates shuffle - Ordnet die Elemente im geg. Array zufällig an.
+ * @param {any[]} array Ein Array
+ */
 function shuffleArray(array) { 
     for (let i = array.length - 1; i >= 1; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -28,6 +28,10 @@ function shuffleArray(array) {
 };
 
 // ############# Model: Fragen laden ############################################################
+/**
+ * Lädt Fragen vom lokalen Server/Webquiz-API-Server an der HTW, überprüft API Fragen
+ * @class Model
+ */
 class Model {
     constructor() { 
         this.topic = View.getTopic();
@@ -41,7 +45,11 @@ class Model {
         this.cacheName = CURRENT_CACHE;
     }
 
-    // Holt eine Frage aus dem JSON oder vom Server
+    /**
+     *  Holt eine Frage aus dem JSON oder vom Server
+     * @param {int} nr Fragenummer
+     * @returns {{ q: string, a: string[], id?: int } | null} Die Frage mit Antwortmöglichkeiten oder `null` bei Fehlern.
+     */
     async getQuestion(nr) {
         // lokale Fragen
         this.topic = View.getTopic();
@@ -192,6 +200,13 @@ class Model {
         return question; // Aufgabe + Lösungen
     }
 
+    /**
+     * Sendet an Webquiz-Server-API geg. Antwort
+     * @param {int} nr Fragenummer
+     * @param {int} answerNr Antwortnummer (0-3)
+     * @param {int}id ID der Frage auf dem Server
+     * @returns Richtig (`1`) / Falsch (`-1`) / Fehler (`null`)
+     */
     async checkAnswer(nr, answerNr, id) { // Server Request schicken mit Antwort
         // curl --user eric.hue@web.de:SecretAmazingPW\!\1\! -X POST -H 'Content-Type: application/json' \
         // https://idefix.informatik.htw-dresden.de:8888/api/quizzes/1959/solve --data '[3]'
@@ -238,6 +253,10 @@ class Model {
 }
 
 // ############ Controller: Frage verarbeiten #########################################################
+/**
+ * Verarbeitet die Fragen vom Model und ist für weitere Quizlogik zuständig
+ * @class Presenter
+ */
 class Presenter {
     constructor() {
         this.question = null;
@@ -258,7 +277,9 @@ class Presenter {
         this.v = v;
     }
 
-    // Reset der Variablen für neue Runde
+    /**
+     * Setzt Variablen zurück für neue Runde
+     */
     reset(){
         console.log("Resetting!");
 
@@ -277,7 +298,10 @@ class Presenter {
         this.noMillionaere = 1;
     }
 
-    // String für Endbildschirm mit Zusammenfassung der Ergebnisse
+    /**
+     * Erstellt String für Endbildschirm mit Zusammenfassung der Ergebnisse
+     * @returns {String} Zusammenfassungstring
+     */
     createQuestionSummaryStr(){
         let summaryString = "";
         for (let i = 0; i < this.questionLog.length; i++){
@@ -311,7 +335,10 @@ class Presenter {
         return summaryString;
     }
 
-    // String mit KatexZeilen und normalen Textzeilen erstellen
+    /**
+     * Erstellt String mit KatexZeilen und normalen Textzeilen
+     * @returns {String} Mathe/Text String
+     */
     createMultilineMathTextStr(){
         let lines = this.question.q.split(/<br\s*\/?>/gi); // an <br> splitten
         let mathLines = [];
@@ -335,7 +362,9 @@ class Presenter {
         return textContent + "<br>" + katexContent;
     }
 
-    // Holt eine neue Frage aus dem Model und setzt die View
+    /**
+     * Holt eine neue Frage aus dem Model, erkennt den Fragetyp und setzt die View entsprechend
+     */
     async setQuestion() {
         View.setNewQuestionBtnDisabled(true);
         View.setAnswerButtonsDisabled(true);
@@ -489,7 +518,11 @@ class Presenter {
         View.setTopicRadioBtnsDisabled(false);
     }
 
-    // Prüft die Antwort, aktualisiert Statistik und setzt die View
+    /**
+     * Prüft die Antwort, aktualisiert Statistik und setzt die View
+     * @param {int} answer Antwortbuttonnummer
+     */
+    // 
     async checkAnswer(answer) {
         View.renderStatusText("Überprüfe Antwort...")
         View.setNewQuestionBtnDisabled(true);
@@ -575,6 +608,10 @@ class Presenter {
         View.setNewQuestionBtnDisabled(false);
     }
 
+    /**
+     * Prüft gespielte Noten bei Notenkategorie, aktualisiert Statistik und setzt die View
+     * @param {String} answer Notenstring
+     */
     async checkAnswerPiano(answer) {
         View.renderStatusText("Überprüfe Antwort...")
         View.setNewQuestionBtnDisabled(true);
@@ -607,14 +644,26 @@ class Presenter {
 }
 
 // ##################### View: Bildschirmausgabe, Eventhandling ########################################
+/**
+ * Handelt Events, Bildschirmausgabe und Sichbarkeit von Elementen
+ * @class View
+ */
 class View {
     constructor(p) {
         this.p = p;  // Presenter
         this.setHandler();
+        this.setupPiano();
+        View.setMusicMode(false);
+        View.setAnswerButtonsDisabled(true);
         
         this.noteString = "";
     }
 
+    /**
+     * Rendert den Text mittels KaTeX im angebenen Element als LaTeX Formel, sollte in $..$ stehen
+     * @param {String} elemName  ID-Namen des Element
+     * @param {bool} MultiLine_bool Mehrzeilig formatieren?
+     */
     static renderKatex(elemName, MultiLine_bool){
         let elem = null;
         
@@ -647,8 +696,10 @@ class View {
         }
     }
 
+    /**
+     * Setzt Handler für Buttons und Radiobuttons
+     */
     setHandler() {
-        // Button handler
         // use capture false -> bubbling (von unten nach oben aufsteigend)
         // this soll auf Objekt zeigen -> bind (this)
         document.getElementById("answer-btn").addEventListener("click", this.checkEvent.bind(this), false); // checkEvent() für 4 Answer Buttons
@@ -658,6 +709,9 @@ class View {
         document.getElementById("piano-check-btn").addEventListener("click", this.checkAnswerPiano.bind(this), false);
     }
 
+    /**
+     * EventListener Funktion nach Klick auf Neue Frage Button
+     */
     newQuestion() {
         this.p.setQuestion();
         
@@ -668,11 +722,22 @@ class View {
         }, 25);
     }
 
+    /**
+     * Setzt Text und Attribute für Antwortbuttons
+     * @param {int} i Buttonnummer (0-3)
+     * @param {String} text Buttontext
+     * @param {int} pos Attribut Position
+     */
     static inscribeButtons(i, text, pos) {
         document.querySelectorAll("#answer-btn > *")[i].textContent = text;
         document.querySelectorAll("#answer-btn > *")[i].setAttribute("number", pos);
     }
 
+    /**
+     * Färbt Antwortbuttons je nach Korrektheit ein oder setzt sie auf Standard zurück
+     * @param {String} colortype Farbtyp: "correct", "false", "default"
+     * @param {int} num Buttonnummer
+     */
     static colorAnswerButtons(colortype, num){
         // background: linear-gradient(to bottom, #2B3C70, #5F6C9C);
         if (colortype === "correct"){
@@ -688,6 +753,10 @@ class View {
         }
     }
 
+    /**
+     * Schaltet Elemente für Kategorie Noten ein und aus
+     * @param {bool} enabled_bool Ein/Aus
+     */
     static setMusicMode(enabled_bool){
         if (enabled_bool == true){
             document.getElementById("question").style.display = "none";
@@ -712,6 +781,10 @@ class View {
         }
     }
 
+    /**
+     * Rendert ein Notenstring mittels abcjs als Noten-SVG
+     * @param {String} notes Noten
+     */
     static renderMusicNotes(notes){
         console.log("RENDERING "+ notes);
         ABCJS.renderAbc(
@@ -739,12 +812,20 @@ class View {
         svg.setAttribute("width", bbox.width);
     }
 
+    /**
+     * Aktiviert/Deaktiviert Antwortbuttons
+     * @param {bool} disabled_bool Aktiviert/Deaktiviert
+     */
     static setAnswerButtonsDisabled(disabled_bool){
         for (let i = 0; i < 4; i++){
             document.querySelectorAll("#answer-btn > *")[i].disabled = disabled_bool;
         }
     }
 
+    /**
+     * Zeigt/versteckt Antwortbuttons
+     * @param {bool} disabled_bool Aktiviert/Deaktiviert
+     */
     static setAnswerButtonsHidden(disabled_bool){
         if (disabled_bool == true){
             for (let i = 0; i < 4; i++){
@@ -758,15 +839,27 @@ class View {
         }
     }
 
+    /**
+     * Aktiviert/Deaktiviert Neue Frage Button
+     * @param {bool} disabled_bool Aktiviert/Deaktiviert
+     */
     static setNewQuestionBtnDisabled(disabled_bool){
         document.getElementById("newquestion-btn").disabled = disabled_bool;
     }
 
+    /**
+     * Aktiviert/Deaktiviert Antwort prüfen, Zurücksetzen Buttons vom Piano
+     * @param {bool} disabled_bool Aktiviert/Deaktiviert
+     */
     static setPianoBtnsDisabled(disabled_bool){
         document.getElementById("piano-check-btn").disabled = disabled_bool;
         document.getElementById("piano-reset-btn").disabled = disabled_bool;
     }
 
+    /**
+     * Zeigt/versteckt Antwort prüfen, Zurücksetzen Buttons vom Piano
+     * @param {bool} disabled_bool Aktiviert/Deaktiviert
+     */
     static setPianoBtnsHidden(disabled_bool){
         if (disabled_bool == true){
             document.getElementById("piano-check-btn").style.display = "none";
@@ -778,6 +871,10 @@ class View {
         }
     }
 
+    /**
+     * Aktiviert/Deaktiviert Thema Radio Buttons
+     * @param {bool} disabled_bool Aktiviert/Deaktiviert
+     */
     static setTopicRadioBtnsDisabled(disabled_bool){
         let radiobtns = document.getElementsByClassName("radio");
         for (let i = 0; i < radiobtns.length; i++){
@@ -792,7 +889,10 @@ class View {
         }
     }
 
-    // Buttons & EndScreenText verstecken/anzeigen
+    /**
+     * Zeigt/versteckt Antwortbuttons/Endbilschirm 
+     * @param {bool} disabled_bool Aktiviert/Deaktiviert
+     */
     static setEndscreen(enabled_bool){
         if (enabled_bool == true){
             for (let i = 0; i < 4; i++){
@@ -809,6 +909,10 @@ class View {
         }
     }
 
+    /**
+     * Ermittelt Thema vom ausgewähltem Radiobutton
+     * @returns {String} Thema
+     */
     static getTopic(){
         if (document.getElementById('web-topic').checked) {
             return "web";
@@ -830,6 +934,10 @@ class View {
         }
     }
     
+    /**
+     *  Eventhandler zur Überprüfung von Benutzerantworten
+     *  @param {Event} event Event-Objekt
+     */
     checkEvent(event) {
         console.log(event.type);
         console.log("Clicked target:", event.target);
@@ -839,6 +947,10 @@ class View {
         }
     }
 
+    /**
+     *  Rendert geg. Text als Frage 
+     *  @param {String} text Frage
+     */
     static renderQuestionText(text) {
         let div = document.getElementById("question");
         let p = document.createElement("p");
@@ -846,29 +958,48 @@ class View {
         div.replaceChildren(p);
     }
 
+    /**
+     *  Rendert geg. Text als Endscreenstatistik
+     *  @param {String} text Statistik
+     */
     static renderEndScreenText(text) {
         let div = document.getElementById("end-screen-text");
         let p = document.createElement("p");
         p.innerHTML = text;
         div.replaceChildren(p);
     }
-
+    
+    /**
+     *  Setzt Fortschrittseite auf geg. Wert inkl. Prozenttext 
+     *  @param {int} percent Prozent
+     */
     static renderProgressBar(percent){
         document.getElementById("progress").style.width = percent + "%";
         let div = document.getElementById("progress-percent");
         div.textContent = percent + "%";
     }
 
+    /**
+     *  Rendert geg. Text als Fortschrittstext
+     *  @param {String} text Fortschritt
+     */
     static renderStatsText(text) {
         let div = document.getElementById("stats");
         div.textContent = text;
     }
 
+    /**
+     *  Rendert geg. Text als Statustext
+     *  @param {String} text Status
+     */
     static renderStatusText(text){
         let div = document.getElementById("status-text");
         div.textContent = "➣ " + text;
     }
 
+    /**
+     *  Initalisiert das Piano und setzt nötigen Handler - einmal aufrufen am Start
+     */
     setupPiano(){
         const white_keys = ['y', 'x', 'c', 'v', 'b', 'n', 'm'];
         const black_keys = ['s', 'd', 'g', 'h', 'j'];
@@ -902,6 +1033,10 @@ class View {
         });
     }
 
+    /**
+     * Eventhandler-Funktion nach Drücken einer Piano-Taste: speichert gespielte Note und spielt diese ab 
+     * @param {Element} key Tastenelement
+     */
     playNote(key) {
         if (this.NoteString.length > 100){
             this.NoteString = "";
@@ -931,11 +1066,17 @@ class View {
         })
     }
 
+    /**
+     *  Eventhandler-Funktion für Zurücksetzen-Button: leert Speicher für gespielte Noten
+     */
     resetPiano(){
         this.NoteString = "";
         View.renderStatusText("Gespielt: " + this.NoteString);
     }
 
+    /**
+     *  Eventhandler-Funktion für Antwort prüfen-Button: Überprüft gespielte Noten mittels Presenter-Funktion
+     */
     checkAnswerPiano(){
         this.p.checkAnswerPiano(this.NoteString);
     }
