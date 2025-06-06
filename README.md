@@ -1,5 +1,5 @@
 
-# Lernprogramm
+# ![Icon](images/icon_32.png)  Lernprogramm
 **Ein webbasiertes Lernprogramm als Beleg von Eric Hübel (23-041-62/s86462) in Webprogrammierung.** 
 
 Die Seite ist verfügbar auf: https://www.informatik.htw-dresden.de/~s86462/Lernprogramm/

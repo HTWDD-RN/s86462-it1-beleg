@@ -37,7 +37,7 @@
 - Icons hinzugefügt
 - Todo:
   - Progress Bar in Status mit Prozent OK
-  - versuchen Thema "Allgemein" von Webquiz-API zu laden OK -> vorherwelche mit curl hochladen
+  - versuchen Thema "Allgemein" von Webquiz-API zu laden OK -> vorher welche mit curl hochladen
 
 ## 10.05.2025 (6h)
 
