@@ -5,6 +5,20 @@ const CACHE_VERSION = 10;
 const CURRENT_CACHE = `Lernprog-PWA-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
+const notesToCache = [
+  "notes/A.mp3",
+  "notes/Bb.mp3",
+  "notes/B.mp3",
+  "notes/C.mp3",
+  "notes/D.mp3",
+  "notes/Db.mp3",
+  "notes/E.mp3",
+  "notes/Eb.mp3",
+  "notes/F.mp3",
+  "notes/G.mp3",
+  "notes/Gb.mp3",
+]
+
 const filesToCache = [
     "src/",
     "src/Lernprogramm.css",
@@ -24,19 +38,6 @@ const filesToCache = [
     "images/icon.png",
     "images/icon_pwa_192.png",
     "images/icon_pwa_512.png",
-    "notes/",
-    "notes/A.mp3",
-    "notes/Ab.mp3",
-    "notes/B.mp3",
-    "notes/Bb.mp3",
-    "notes/C.mp3",
-    "notes/D.mp3",
-    "notes/Db.mp3",
-    "notes/E.mp3",
-    "notes/Eb.mp3",
-    "notes/F.mp3",
-    "notes/G.mp3",
-    "notes/Gb.mp3",
     "scripts/",
     "scripts/abcjs/abcjs-basic-min.js",
     "scripts/katex/katex.min.js",
@@ -65,7 +66,6 @@ const filesToCache = [
     "scripts/katex/fonts/KaTeX_Typewriter-Regular.woff2"
 ];
 
-
 // on activation we clean up the previously registered service workers
 self.addEventListener('activate', evt =>
   evt.waitUntil(
@@ -85,6 +85,7 @@ self.addEventListener('activate', evt =>
 self.addEventListener('install', evt =>
   evt.waitUntil(
     caches.open(CURRENT_CACHE).then(cache => {
+      cache.addAll(notesToCache); // needs to be done seperatly on FF?!
       return cache.addAll(filesToCache);
     })
   )

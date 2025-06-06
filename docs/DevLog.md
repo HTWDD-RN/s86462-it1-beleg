@@ -77,7 +77,7 @@
   - Fehlende Datei überprüfen (manifest?) OK
   - bessere Check wenn Offline? OK
 
-  ## 12.05.2025 (9h)
+## 12.05.2025 (9h)
 
 - ServiceWorker mit Cache für Offline Nutzung hinzugefügt
   - geht irgendwie nicht ohne HTTPS aber Firefox meckert das es den Zertifikataussteller nicht kennt
@@ -140,3 +140,10 @@
 - gedrückte Noten werden in einem String gesammelt und auf Wunsch des Nutzers mit der Antwort verglichen
   -> diese müssen beide vom selben Datentyp sein, sonst schlägt der Stringvergleich (===) fehl auch wenn der Inhalt exakt derselbe ist?!, gelöst mit String()
 - Samples wurden selbst neu aufgenommen mithilfe einer Midi-Datei und einer gut klingenden Soundfont
+
+## 06.06.2025 (3h)
+
+- nochmal im SW die Noten einzeln mit addAll in den Cache hinzugefügt
+  - es geht unter FF nicht wenn man die Noten mit den anderen Dateien dem Cache hinzufügt?!
+- Schwarze Tasten werden im Thema Noten nun auch genutzt
+- Readme hinzugefügt
