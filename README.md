@@ -23,7 +23,7 @@ Die Seite kann lokal gestartet im Hauptverzeichnis werden mit: ```python -m http
 
 ## Probleme/Herausforderungen
 
-- siehe [DevLog](docs/DevLog.md)
+➤ siehe [DevLog](docs/DevLog.md)
 
 ## genutzter Browser
 
@@ -35,4 +35,7 @@ Die Seite kann lokal gestartet im Hauptverzeichnis werden mit: ```python -m http
 
 - zusätzlich Seiten zum Erstellen/Bearbeiten von Aufgaben
 - Login für Webquizserver
-- Mehrfachantwort / nicht alle Buttons müssen belegt sein mit Antwort
+- Mehrfachantwort
+- nicht alle Buttons müssen belegt sein mit Antwort
+
+*Github-Link: https://github.com/HTWDD-RN/s86462-it1-beleg*

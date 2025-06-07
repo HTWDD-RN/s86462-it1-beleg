@@ -9,7 +9,7 @@
   - Bild im Header
 - erste Versuche Aufgaben von JSON zu laden über Datei
   - CORS-Fehler, wenn die Website direkt aufgerufen :/
-  - muss Python-Server starten mit: python -m http.server 8000
+  - muss Python-Server starten mit: ```python -m http.server 8000```
 - JSON-Format: q: Question, a: Answers (erste ist immer richtig)
 - Quiz funktioniert und es werden Fragen erfolgreich aus der Datei geladen und angezeigt
 - zusätzlich werden Antworten überprüft und das Ergebnis angezeigt
@@ -20,7 +20,7 @@
   - Einstellen des Themas (web, math, ...) über NavBar mit Radio Buttons -> falls Thema anders als das aktuelle Thema, zurücksetzen OK
   - Button beim Anzeigen der Statistiken ausblenden/leeren & herausfinden wie man Zeilenumbruch für QuestionText machen kann (br?) OK
 - DevTools -> Network -> Disable Cache, damit immer akt. JS geladen wird
-  - für json: {cache: "no-store"}
+  - für json: ```{cache: "no-store"}```
 
 ## 09.05.2025 (8h)
 
@@ -60,14 +60,14 @@
 - Ausgewählter Antwortbutton wird nun eingefärbt, ob richtig oder falsch für schnelleres Feedback
   - style.background Attribut muss entfernt werden, damit das Standardbuttondesign wieder greift
 - KaTeX Rendering integriert (v0.16.22)
-  - viel mit Regex versucht nicht gekennzeichnete Formeln in \$ ... \$ einzuschließen -> funktioniert so semi gut
-  - es wird damit auch erkannt ob es $ ... $ gibt und tut dann nichts an der Frage ändern
+  - viel mit Regex versucht nicht gekennzeichnete Formeln in ```\$ ... \$``` einzuschließen -> funktioniert so semi gut
+  - es wird damit auch erkannt ob es ```$ ... $``` gibt und tut dann nichts an der Frage ändern
 - KaTeX wird gerendert, wenn eingeschlossen mit $ oder von Regex eine Formel erkannt wird
 - die Antworten dürfen nicht mit $ eingeschlossen werden (passiert automatisch)
-- Überprüfung der Antworten: da dafür der Buttontext verwendet wird und Katex diesen ändert muss ich diese in einem Arrayzwischenspeichern
+- Überprüfung der Antworten: da dafür der Buttontext verwendet wird und Katex diesen ändert muss ich diese in einem Array zwischenspeichern
 - Bug: beim Klick auf Button passiert nichts??? -> geschiet durch renderKatex :(
   -> das Problem war das man auf den Katex Text klicken kann und dies auch den Event Handler triggert, aber da dies vom Typ kein Button ist passiert nichts
-  -> gelöst indem Pointerevents für katex-display und span abgeschaltet werden
+  -> gelöst indem Pointerevents für ```katex-display``` und ```span``` abgeschaltet werden
 - !important ist wichtig, damit Katex CSS übernommen wird
 - beim Versuch Katex herunterzuladen ist meine Seite auf Firefox Android eingefroren -> hab Katex heruntergeladen und verwende es lokal, was dieses Problem behoben hat?
 
@@ -81,7 +81,7 @@
 
 - ServiceWorker mit Cache für Offline Nutzung hinzugefügt
   - geht irgendwie nicht ohne HTTPS aber Firefox meckert das es den Zertifikataussteller nicht kennt
-  - Registrierung schlägt fehl mit: DOMException: The operation is insecure.
+  - Registrierung schlägt fehl mit: ```DOMException: The operation is insecure.```
   -> ich glaube es hat zum ersten Mal funktioniert!!! Indem ich den service-worker.js ins Hauptverzeichnis / gepackt habe lädt die Seite nun offline. Vorher hatte es wohl Probleme, da es in /scripts/ war und ich den scope nicht ohne DOMException auf / setzen konnte
   -> falls ein Pfad nicht existiert, installiert der SW nicht korrekt und es gibt keine Fehlermeldung
 - Firefox scheint im Gegensatz zu Chrome das Manifest zu ignorieren und nutzt einfach das Favicon (nein, FF erwartet halt nur mehr)
@@ -89,19 +89,21 @@
 - Ich lade immer die neusten Ressourcen wenn online, tu aber wenn offline aus dem Cache laden :)
   - sonst auch den Edge Case, wenn man Online ist, aber der Server mit questions.json nicht erreichbar ist besser gehandelt
 
-  - Todo:
-   - Cache muss doch gelöscht im SW werden damit Firefox Android auch in der PWA (wenn man ein Icon erstellt) questions.json neulädt
-   -> davor irgendwie checken, ob der Cache existiert (denn sonst scheint es beim Installieren des SW auf Desktop einzufrieren?)
-   -> ist leider auch keine Lösung, da dadurch irgendwann die ganze Website im Offline Modus weg ist
-   -> ich ignoriere das für jetzt (Idee ist Network first, anstatt Cache first)
+- Todo:
+  - Cache muss doch gelöscht im SW werden damit Firefox Android auch in der PWA (wenn man ein Icon erstellt) questions.json neulädt
+  - davor irgendwie checken, ob der Cache existiert (denn sonst scheint es beim Installieren des SW auf Desktop einzufrieren?)
+  - ist leider auch keine Lösung, da dadurch irgendwann die ganze Website im Offline Modus weg ist
+  - ich ignoriere das für jetzt (Idee ist Network first, anstatt Cache first)
 
 ## 13.05.2025 (6h)
 
 - Dateipfade relativ gemacht, sodass auf dem Informatik Server alles angezeigt wird
 - manifest.webmanifest auf dem Informatik-Server:
+  ```
   "scope": "/~s86462/Lernprogramm/",
   "start_url": "https://www.informatik.htw-dresden.de/~s86462/Lernprogramm/",
-- WICHTIG: Wenn es eine DOMException: The operation is insecure., dann ist der Pfad des SW beim Registrieren fehlerhaft oder scope / ist angegeben
+  ```
+- WICHTIG: Wenn es eine ```DOMException: The operation is insecure.``` gibt, dann ist der Pfad des SW beim Registrieren fehlerhaft oder scope / ist angegeben
 - Noten Thema hinzugefügt
 - Musikbibliothek abcjs integriert -> muss ABCJS.func schreiben, damit es funktioniert
 - SVG Eigenschaften bearbeitet, sodass es zentriert dargestellt wird
@@ -116,8 +118,8 @@
 - KaTeX Rendering für Statistiken hinzugefügt und richtige Antwort (mit display: false kann es in der selben Zeile angezeigt werden)
 - Fortschrittsleiste ist bei ersten Frage bei 0% und geht erst nach Lösen der Frage hoch
 - eigene Fragen hochgeladen -> vorher gelöste Fragen zu löschen schlägt fehl, da Fragen-Datenbankeinträge noch in Relation mit completion sind:
-  - "could not execute statement; SQL [n/a]; constraint [\"FKKFVSRR06095Q83TPUU1X51H3: PUBLIC.COMPLETION FOREIGN KEY(QUIZ_ID) REFERENCES PUBLIC.QUIZ(ID) (1975)\"
-- noch zusätzliche Cache Fixes, sodass Fragen vom WebQuizServer nie gecacht werden (entvalidierung durch Date.now())
+  - ```"could not execute statement; SQL [n/a]; constraint [\"FKKFVSRR06095Q83TPUU1X51H3: PUBLIC.COMPLETION FOREIGN KEY(QUIZ_ID) REFERENCES PUBLIC.QUIZ(ID) (1975)\"```
+- noch zusätzliche Cache Fixes, sodass Fragen vom WebQuizServer nie gecacht werden (entvalidierung durch ```Date.now()```)
 - SW-Fixes, sodass die Seite schneller lädt, indem der Timeout nur für bestimmte Dateien höher gesetzt wird (ich hasse das langsam)
 - außerdem scheinen Chrome und Firefox etwas anders zu funktionieren wenn offline:
   - Firefox gibt sofort NetworkError
@@ -138,12 +140,12 @@
 
 - Piano-Keyboard integriert ins Lernprogramm (Basis: https://github.com/pncsoares/piano)
 - gedrückte Noten werden in einem String gesammelt und auf Wunsch des Nutzers mit der Antwort verglichen
-  -> diese müssen beide vom selben Datentyp sein, sonst schlägt der Stringvergleich (===) fehl auch wenn der Inhalt exakt derselbe ist?!, gelöst mit String()
+  -> diese müssen beide vom selben Datentyp sein, sonst schlägt der Stringvergleich (===) fehl auch wenn der Inhalt exakt derselbe ist?!, gelöst mit ```String()```
 - Samples wurden selbst neu aufgenommen mithilfe einer Midi-Datei und einer gut klingenden Soundfont
 
 ## 06.06.2025 (3h)
 
-- nochmal im SW die Noten einzeln mit addAll in den Cache hinzugefügt
+- nochmal im SW die Noten einzeln mit ```addAll()``` in den Cache hinzugefügt
   - es geht unter FF nicht wenn man die Noten mit den anderen Dateien dem Cache hinzufügt?!
 - Schwarze Tasten werden im Thema Noten nun auch genutzt
 - Readme hinzugefügt
