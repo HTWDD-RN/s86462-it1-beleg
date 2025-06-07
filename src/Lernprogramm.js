@@ -47,8 +47,8 @@ class Model {
 
     /**
      *  Holt eine Frage aus dem JSON oder vom Server
-     * @param {int} nr Fragenummer
-     * @returns {{ q: string, a: string[], id?: int } | null} Die Frage mit Antwortmöglichkeiten oder `null` bei Fehlern.
+     * @param {number} nr Fragenummer
+     * @returns {{ q: string, a: string[], id?: number } | null} Die Frage mit Antwortmöglichkeiten oder `null` bei Fehlern.
      */
     async getQuestion(nr) {
         // lokale Fragen
@@ -202,9 +202,9 @@ class Model {
 
     /**
      * Sendet an Webquiz-Server-API geg. Antwort
-     * @param {int} nr Fragenummer
-     * @param {int} answerNr Antwortnummer (0-3)
-     * @param {int}id ID der Frage auf dem Server
+     * @param {number} nr Fragenummer
+     * @param {number} answerNr Antwortnummer (0-3)
+     * @param {number}id ID der Frage auf dem Server
      * @returns Richtig (`1`) / Falsch (`-1`) / Fehler (`null`)
      */
     async checkAnswer(nr, answerNr, id) { // Server Request schicken mit Antwort
@@ -300,7 +300,7 @@ class Presenter {
 
     /**
      * Erstellt String für Endbildschirm mit Zusammenfassung der Ergebnisse
-     * @returns {String} Zusammenfassungstring
+     * @returns {string} Zusammenfassungstring
      */
     createQuestionSummaryStr(){
         let summaryString = "";
@@ -337,7 +337,7 @@ class Presenter {
 
     /**
      * Erstellt String mit KatexZeilen und normalen Textzeilen
-     * @returns {String} Mathe/Text String
+     * @returns {string} Mathe/Text String
      */
     createMultilineMathTextStr(){
         let lines = this.question.q.split(/<br\s*\/?>/gi); // an <br> splitten
@@ -520,7 +520,7 @@ class Presenter {
 
     /**
      * Prüft die Antwort, aktualisiert Statistik und setzt die View
-     * @param {int} answer Antwortbuttonnummer
+     * @param {number} answer Antwortbuttonnummer
      */
     // 
     async checkAnswer(answer) {
@@ -610,7 +610,7 @@ class Presenter {
 
     /**
      * Prüft gespielte Noten bei Notenkategorie, aktualisiert Statistik und setzt die View
-     * @param {String} answer Notenstring
+     * @param {string} answer Notenstring
      */
     async checkAnswerPiano(answer) {
         View.renderStatusText("Überprüfe Antwort...")
@@ -661,7 +661,7 @@ class View {
 
     /**
      * Rendert den Text mittels KaTeX im angebenen Element als LaTeX Formel, sollte in $..$ stehen
-     * @param {String} elemName  ID-Namen des Element
+     * @param {string} elemName  ID-Namen des Element
      * @param {bool} MultiLine_bool Mehrzeilig formatieren?
      */
     static renderKatex(elemName, MultiLine_bool){
@@ -724,9 +724,9 @@ class View {
 
     /**
      * Setzt Text und Attribute für Antwortbuttons
-     * @param {int} i Buttonnummer (0-3)
-     * @param {String} text Buttontext
-     * @param {int} pos Attribut Position
+     * @param {number} i Buttonnummer (0-3)
+     * @param {string} text Buttontext
+     * @param {number} pos Attribut Position
      */
     static inscribeButtons(i, text, pos) {
         document.querySelectorAll("#answer-btn > *")[i].textContent = text;
@@ -735,8 +735,8 @@ class View {
 
     /**
      * Färbt Antwortbuttons je nach Korrektheit ein oder setzt sie auf Standard zurück
-     * @param {String} colortype Farbtyp: "correct", "false", "default"
-     * @param {int} num Buttonnummer
+     * @param {string} colortype Farbtyp: "correct", "false", "default"
+     * @param {number} num Buttonnummer
      */
     static colorAnswerButtons(colortype, num){
         // background: linear-gradient(to bottom, #2B3C70, #5F6C9C);
@@ -783,7 +783,7 @@ class View {
 
     /**
      * Rendert ein Notenstring mittels abcjs als Noten-SVG
-     * @param {String} notes Noten
+     * @param {string} notes Noten
      */
     static renderMusicNotes(notes){
         console.log("RENDERING "+ notes);
@@ -911,7 +911,7 @@ class View {
 
     /**
      * Ermittelt Thema vom ausgewähltem Radiobutton
-     * @returns {String} Thema
+     * @returns {string} Thema
      */
     static getTopic(){
         if (document.getElementById('web-topic').checked) {
@@ -949,7 +949,7 @@ class View {
 
     /**
      *  Rendert geg. Text als Frage 
-     *  @param {String} text Frage
+     *  @param {string} text Frage
      */
     static renderQuestionText(text) {
         let div = document.getElementById("question");
@@ -960,7 +960,7 @@ class View {
 
     /**
      *  Rendert geg. Text als Endscreenstatistik
-     *  @param {String} text Statistik
+     *  @param {string} text Statistik
      */
     static renderEndScreenText(text) {
         let div = document.getElementById("end-screen-text");
@@ -971,7 +971,7 @@ class View {
     
     /**
      *  Setzt Fortschrittseite auf geg. Wert inkl. Prozenttext 
-     *  @param {int} percent Prozent
+     *  @param {number} percent Prozent
      */
     static renderProgressBar(percent){
         document.getElementById("progress").style.width = percent + "%";
@@ -981,7 +981,7 @@ class View {
 
     /**
      *  Rendert geg. Text als Fortschrittstext
-     *  @param {String} text Fortschritt
+     *  @param {string} text Fortschritt
      */
     static renderStatsText(text) {
         let div = document.getElementById("stats");
@@ -990,7 +990,7 @@ class View {
 
     /**
      *  Rendert geg. Text als Statustext
-     *  @param {String} text Status
+     *  @param {string} text Status
      */
     static renderStatusText(text){
         let div = document.getElementById("status-text");

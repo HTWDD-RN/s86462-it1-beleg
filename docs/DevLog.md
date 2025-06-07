@@ -147,3 +147,8 @@
   - es geht unter FF nicht wenn man die Noten mit den anderen Dateien dem Cache hinzufügt?!
 - Schwarze Tasten werden im Thema Noten nun auch genutzt
 - Readme hinzugefügt
+
+## 07.06.2025 (2h)
+
+- letzte Feinheiten
+- JSDoc Typen korrigiert

@@ -19,6 +19,7 @@ Die Seite kann lokal gestartet im Hauptverzeichnis werden mit: ```python -m http
 - Noten werden mittels [abcjs](https://www.abcjs.net/) gerendert
   - dies wurde anstatt Vexflow gewählt, da es damit ähnlich einfach ist wie mit KaTeX die Noten zu rendern
 - [Piano-Keyboard](https://github.com/pncsoares/piano) zum Eingeben der Noten
+  - dies wurde gewählt, da es sehr einfach zu verstehen ist und deshalb leicht in die bestehende Webapp integriert werden konnte
 
 ## Probleme/Herausforderungen
 
